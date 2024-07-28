@@ -30,21 +30,20 @@ export default function OSMatchesTable({ host }: Props) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {host.os.os_matches &&
-          host.os.os_matches.map((osMatch) => {
-            return (
-              <TableRow key={osMatch.name}>
-                <TableCell>{osMatch.name}</TableCell>
-                <TableCell>{osMatch.accuracy}</TableCell>
-                <TableCell>{osMatch.os_classes[0].vendor}</TableCell>
-                <TableCell>{osMatch.os_classes[0].os_generation}</TableCell>
-                <TableCell>{osMatch.os_classes[0].type}</TableCell>
-                <TableCell>{osMatch.os_classes[0].accuracy}</TableCell>
-                <TableCell>{osMatch.os_classes[0].os_family}</TableCell>
-                <TableCell>{osMatch.os_classes[0].cpes.join(", ")}</TableCell>
-              </TableRow>
-            );
-          })}
+        {host.os.os_matches?.map((osMatch) => {
+          return (
+            <TableRow key={osMatch.name}>
+              <TableCell>{osMatch.name}</TableCell>
+              <TableCell>{osMatch.accuracy}</TableCell>
+              <TableCell>{osMatch.os_classes[0].vendor}</TableCell>
+              <TableCell>{osMatch.os_classes[0].os_generation}</TableCell>
+              <TableCell>{osMatch.os_classes[0].type}</TableCell>
+              <TableCell>{osMatch.os_classes[0].accuracy}</TableCell>
+              <TableCell>{osMatch.os_classes[0].os_family}</TableCell>
+              <TableCell>{osMatch.os_classes[0].cpes.join(", ")}</TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
