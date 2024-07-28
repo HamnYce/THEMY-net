@@ -34,9 +34,12 @@ export default function Home() {
         })}
       </div>
       <div className="h-screen w-screen bg-background text-foreground p-10 overflow-auto">
-        <HostNamesTable hostnames={hostData[selectedHostIndex].hostnames} />
-        <PortsTable host={hostData[selectedHostIndex]} />
+        <HostNamesTable
+          hostnames={hostData[selectedHostIndex].hostnames ?? []}
+        />
+        <PortsTable ports={hostData[selectedHostIndex].ports} />
         <OSMatchesTable host={hostData[selectedHostIndex]} />
+        {/* // TODO: add addresses table */}
       </div>
     </main>
   );
