@@ -1,6 +1,7 @@
 "use client";
 
-import { hostData } from "@/data/1";
+import { hostData as data1 } from "@/data/1";
+import { hostData as data2 } from "@/data/2";
 import { useState } from "react";
 import { Host } from "@/types/host_type.ts";
 import OSMatchesTable from "@/components/host_tables/os_matches_table";
@@ -9,6 +10,7 @@ import PortsTable from "@/components/host_tables/ports_table";
 
 export default function Home() {
   const [selectedHostIndex, setSelectedHostIndex] = useState(0);
+  const [hostData, _] = useState([...data1, ...data2]);
 
   return (
     <main className="flex h-screen w-full columns-2 dark ">
