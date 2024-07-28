@@ -2,12 +2,11 @@ import {
   Table,
   TableHeader,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableRow,
 } from "@/components/ui/table";
-import { Host, Hostname } from "@/types/host_type";
+import { Hostname } from "@/types/host_type";
 import {
   createColumnHelper,
   flexRender,
@@ -24,7 +23,7 @@ export default function HostNamesTable({ hostnames }: Props) {
 
   const defaultColumns = [
     columnHelper.accessor("name", {
-      header: "Hostname",
+      header: "Host Name",
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("type", {
@@ -41,7 +40,6 @@ export default function HostNamesTable({ hostnames }: Props) {
 
   return (
     <Table>
-      <TableCaption>Host Names</TableCaption>
       <TableHeader>
         <TableRow>
           {table.getFlatHeaders().map((header) => (
