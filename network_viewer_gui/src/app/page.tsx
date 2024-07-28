@@ -32,7 +32,7 @@ export default function Home() {
         })}
       </div>
       <div className="h-screen w-screen bg-background text-foreground p-10 overflow-auto">
-        <HostNameTable host={hostData[selectedHostIndex]} />
+        <HostNameTable hostnames={hostData[selectedHostIndex].hostnames} />
         <PortsTable host={hostData[selectedHostIndex]} />
         <OSMatchesTable host={hostData[selectedHostIndex]} />
       </div>
