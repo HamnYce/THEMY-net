@@ -13,7 +13,7 @@ export interface Host {
   comment: string;
   addresses: Address[];
   extra_ports: ExtraPort[];
-  hostnames: Hostname[];
+  hostnames?: Hostname[];
   host_scripts: any;
   ports: Port[];
   smurfs: any;
