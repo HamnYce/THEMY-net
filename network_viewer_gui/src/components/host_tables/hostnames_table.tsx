@@ -43,7 +43,9 @@ export default function HostNamesTable({ hostnames }: Props) {
       <TableHeader>
         <TableRow>
           {table.getFlatHeaders().map((header) => (
-            <TableHead key={header.id}>{header.id}</TableHead>
+            <TableHead key={header.id}>
+              {flexRender(header.column.columnDef.header, header.getContext())}
+            </TableHead>
           ))}
         </TableRow>
       </TableHeader>
