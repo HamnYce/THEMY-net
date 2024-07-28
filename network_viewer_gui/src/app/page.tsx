@@ -3,15 +3,6 @@
 import { hostData } from "@/data/1";
 import { useState } from "react";
 import { Host } from "@/types/host_type.ts";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import OSMatchesTable from "@/components/host_tables/os_matches_table";
 import HostNameTable from "@/components/host_tables/hostnames_table";
 import PortsTable from "@/components/host_tables/ports_table";
