@@ -43,7 +43,9 @@ func ScanHosts(scanner *nmap.Scanner) (hosts []nmap.Host, jsn []byte, warnings [
 		outputBytes = append(outputBytes, []byte(","))
 	}
 	outputBytes = append(outputBytes, []byte("]"))
-	jsn = bytes.Join(outputBytes, []byte(""))
+
+	// cleaning up for use as a ts object
+	jsn = bytes.ReplaceAll(bytes.Join(outputBytes, []byte("")), []byte("null"), []byte("undefined"))
 
 	return
 }
