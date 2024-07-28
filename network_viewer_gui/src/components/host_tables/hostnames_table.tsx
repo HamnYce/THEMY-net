@@ -19,7 +19,7 @@ type Props = {
   readonly hostnames: Hostname[];
 };
 
-export default function HostNameTable({ hostnames }: Props) {
+export default function HostNamesTable({ hostnames }: Props) {
   const columnHelper = createColumnHelper<Hostname>();
 
   const defaultColumns = [

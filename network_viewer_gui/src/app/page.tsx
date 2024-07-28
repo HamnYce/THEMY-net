@@ -4,7 +4,7 @@ import { hostData } from "@/data/1";
 import { useState } from "react";
 import { Host } from "@/types/host_type.ts";
 import OSMatchesTable from "@/components/host_tables/os_matches_table";
-import HostNameTable from "@/components/host_tables/hostnames_table";
+import HostNamesTable from "@/components/host_tables/hostnames_table";
 import PortsTable from "@/components/host_tables/ports_table";
 
 export default function Home() {
@@ -32,7 +32,7 @@ export default function Home() {
         })}
       </div>
       <div className="h-screen w-screen bg-background text-foreground p-10 overflow-auto">
-        <HostNameTable hostnames={hostData[selectedHostIndex].hostnames} />
+        <HostNamesTable hostnames={hostData[selectedHostIndex].hostnames} />
         <PortsTable host={hostData[selectedHostIndex]} />
         <OSMatchesTable host={hostData[selectedHostIndex]} />
       </div>
