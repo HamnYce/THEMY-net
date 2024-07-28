@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import OSMatchesTable from "@/components/host_tables/os_matches_table";
+import HostNameTable from "@/components/host_tables/hostname_table";
 
 export default function Home() {
   const [selectedHostIndex, setSelectedHostIndex] = useState(0);
@@ -37,6 +38,7 @@ export default function Home() {
         })}
       </div>
       <div className="flex-col h-screen w-screen bg-blue-400 p-10">
+        <HostNameTable host={hostData[selectedHostIndex]} />
         <OSMatchesTable host={hostData[selectedHostIndex]} />
       </div>
     </main>
