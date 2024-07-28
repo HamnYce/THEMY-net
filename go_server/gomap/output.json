@@ -38,9 +38,7 @@
               "type": "switch",
               "accuracy": 96,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -55,10 +53,7 @@
               "type": "WAP",
               "accuracy": 93,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:huawei:ap6050dn",
-                "cpe:/h:huawei:s57205"
-              ]
+              "cpes": ["cpe:/h:huawei:ap6050dn", "cpe:/h:huawei:s57205"]
             }
           ]
         },
@@ -73,10 +68,7 @@
               "type": "switch",
               "accuracy": 93,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/h:huawei:s9300",
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/h:huawei:s9300", "cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -91,9 +83,7 @@
               "type": "switch",
               "accuracy": 93,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp"]
             }
           ]
         },
@@ -108,9 +98,7 @@
               "type": "switch",
               "accuracy": 92,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp:5.160"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp:5.160"]
             }
           ]
         },
@@ -125,9 +113,7 @@
               "type": "switch",
               "accuracy": 91,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:huawei:cloudengine_ce6800"
-              ]
+              "cpes": ["cpe:/h:huawei:cloudengine_ce6800"]
             }
           ]
         },
@@ -142,10 +128,7 @@
               "type": "switch",
               "accuracy": 91,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/h:huawei:s2326",
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/h:huawei:s2326", "cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -160,9 +143,7 @@
               "type": "switch",
               "accuracy": 90,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:3com:superstack_3_switch_3870"
-              ]
+              "cpes": ["cpe:/h:3com:superstack_3_switch_3870"]
             }
           ]
         },
@@ -177,9 +158,7 @@
               "type": "router",
               "accuracy": 90,
               "os_family": "IOS",
-              "cpes": [
-                "cpe:/o:cisco:ios:15.4"
-              ]
+              "cpes": ["cpe:/o:cisco:ios:15.4"]
             }
           ]
         },
@@ -194,9 +173,7 @@
               "type": "switch",
               "accuracy": 90,
               "os_family": "Comware",
-              "cpes": [
-                "cpe:/o:h3c:comware:5.20"
-              ]
+              "cpes": ["cpe:/o:h3c:comware:5.20"]
             }
           ]
         }
@@ -490,7 +467,8 @@
       }
     ],
     "smurfs": null
-  }{
+  },
+  {
     "distance": {
       "value": 1
     },
@@ -529,10 +507,7 @@
               "type": "WAP",
               "accuracy": 96,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:huawei:ap6050dn",
-                "cpe:/h:huawei:s57205"
-              ]
+              "cpes": ["cpe:/h:huawei:ap6050dn", "cpe:/h:huawei:s57205"]
             }
           ]
         },
@@ -547,10 +522,7 @@
               "type": "switch",
               "accuracy": 96,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/h:huawei:s9300",
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/h:huawei:s9300", "cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -565,9 +537,7 @@
               "type": "switch",
               "accuracy": 93,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -582,10 +552,7 @@
               "type": "switch",
               "accuracy": 93,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/h:huawei:s2326",
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/h:huawei:s2326", "cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -600,9 +567,7 @@
               "type": "switch",
               "accuracy": 92,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp:5.160"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp:5.160"]
             }
           ]
         },
@@ -617,9 +582,7 @@
               "type": "switch",
               "accuracy": 91,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:huawei:cloudengine_ce6800"
-              ]
+              "cpes": ["cpe:/h:huawei:cloudengine_ce6800"]
             }
           ]
         },
@@ -634,9 +597,7 @@
               "type": "switch",
               "accuracy": 90,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp"]
             }
           ]
         },
@@ -651,9 +612,7 @@
               "type": "PBX",
               "accuracy": 90,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:nec:sv8100"
-              ]
+              "cpes": ["cpe:/h:nec:sv8100"]
             }
           ]
         },
@@ -668,9 +627,7 @@
               "type": "router",
               "accuracy": 89,
               "os_family": "SR OS",
-              "cpes": [
-                "cpe:/o:alcatel-lucent:sr_os:9.0.r9"
-              ]
+              "cpes": ["cpe:/o:alcatel-lucent:sr_os:9.0.r9"]
             }
           ]
         },
@@ -983,7 +940,8 @@
       }
     ],
     "smurfs": null
-  }{
+  },
+  {
     "distance": {
       "value": 1
     },
@@ -1017,10 +975,7 @@
               "type": "router",
               "accuracy": 100,
               "os_family": "IOS",
-              "cpes": [
-                "cpe:/h:cisco:2500_router",
-                "cpe:/o:cisco:ios:11.1"
-              ]
+              "cpes": ["cpe:/h:cisco:2500_router", "cpe:/o:cisco:ios:11.1"]
             }
           ]
         },
@@ -1035,9 +990,7 @@
               "type": "switch",
               "accuracy": 100,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:huawei:cloudengine_ce6800"
-              ]
+              "cpes": ["cpe:/h:huawei:cloudengine_ce6800"]
             }
           ]
         },
@@ -1052,10 +1005,7 @@
               "type": "WAP",
               "accuracy": 100,
               "os_family": "embedded",
-              "cpes": [
-                "cpe:/h:huawei:ap6050dn",
-                "cpe:/h:huawei:s57205"
-              ]
+              "cpes": ["cpe:/h:huawei:ap6050dn", "cpe:/h:huawei:s57205"]
             }
           ]
         },
@@ -1070,10 +1020,7 @@
               "type": "switch",
               "accuracy": 100,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/h:huawei:s2326",
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/h:huawei:s2326", "cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -1088,10 +1035,7 @@
               "type": "switch",
               "accuracy": 100,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/h:huawei:s9300",
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/h:huawei:s9300", "cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -1106,9 +1050,7 @@
               "type": "switch",
               "accuracy": 100,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp:3"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp:3"]
             }
           ]
         },
@@ -1123,9 +1065,7 @@
               "type": "switch",
               "accuracy": 100,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp:5.160"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp:5.160"]
             }
           ]
         },
@@ -1140,9 +1080,7 @@
               "type": "switch",
               "accuracy": 100,
               "os_family": "VRP",
-              "cpes": [
-                "cpe:/o:huawei:vrp"
-              ]
+              "cpes": ["cpe:/o:huawei:vrp"]
             }
           ]
         }
@@ -1432,7 +1370,8 @@
       }
     ],
     "smurfs": null
-  }{
+  },
+  {
     "distance": {
       "value": 0
     },
@@ -1471,9 +1410,7 @@
               "type": "general purpose",
               "accuracy": 100,
               "os_family": "macOS",
-              "cpes": [
-                "cpe:/o:apple:mac_os_x:12"
-              ]
+              "cpes": ["cpe:/o:apple:mac_os_x:12"]
             }
           ]
         }
