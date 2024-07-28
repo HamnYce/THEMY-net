@@ -10,7 +10,7 @@ import {
 import { Host } from "@/types/host_type";
 
 type Props = {
-  host: Host;
+  readonly host: Host;
 };
 
 export default function OSMatchesTable({ host }: Props) {
