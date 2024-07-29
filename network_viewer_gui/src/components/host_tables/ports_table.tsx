@@ -6,7 +6,7 @@ import {
   TableHead,
   TableRow,
 } from "@/components/ui/table";
-import { Host, Port } from "@/types/host_type";
+import { Port } from "@/types/host_type";
 import {
   createColumnHelper,
   flexRender,
