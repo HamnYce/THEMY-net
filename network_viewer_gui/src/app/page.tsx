@@ -38,7 +38,12 @@ export default function Home() {
                 <>
                   <div className="w-2"></div>
                   <p
-                    className="text-foreground text-xs flex flex-col justify-center cursor-pointer"
+                    className={
+                      "text-xs flex flex-col justify-center cursor-pointer " +
+                      (seeMoreDetails
+                        ? "text-foreground"
+                        : "text-muted-foreground")
+                    }
                     onClick={() => setSeeMoreDetails(!seeMoreDetails)}
                   >
                     see {seeMoreDetails ? "less" : "more"}
