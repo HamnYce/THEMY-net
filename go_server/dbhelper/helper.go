@@ -126,9 +126,11 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (rowsAffected int64, err error
 	return res.RowsAffected()
 }
 
-// func deleteRow(db *sql.DB, rowID int) (err error) {
-// 	return
-// }
+func DeleteRow(db *sql.DB, rowID int) (err error) {
+	dbDeleteStatement := "DELETE FROM data WHERE rowid = ?"
+	_, err = db.Exec(dbDeleteStatement, rowID)
+	return
+}
 
 // Scans current row from sql.Rows into dbhelper.Row
 func ScanRow(sqlRows *sql.Rows, row *Row) (err error) {
