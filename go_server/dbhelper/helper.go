@@ -40,6 +40,14 @@ type Row struct {
 	StorageGB       *int
 }
 
+func FetchRowCount(db *sql.DB) (rowCount int) {
+	row := db.QueryRow("SELECT COUNT(*) FROM data")
+
+	row.Scan(&rowCount)
+
+	return
+}
+
 // Creates a row and returns the rowID
 func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 	rowMap, err := RowToMap(row)
