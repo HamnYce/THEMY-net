@@ -1,51 +1,94 @@
 package gomap
 
 import (
-	"bytes"
-	"encoding/json"
+	"strings"
 
 	"github.com/Ullaakut/nmap"
 )
 
-func NewScanner(addresses []string) (*nmap.Scanner, error) {
+type Host struct {
+	IPAddress  string
+	MACAddress string
+	Hostname   string
+	HostType   string
+	OsName     string
+	OsVersion  string
+	Ports      []uint16
+	RecordedAt string
+}
+
+type Port struct {
+	ID      uint16
+	service string
+	state   string
+	reason  string
+}
+
+func NewHostScaner(addresses []string, mostCommonPorts int) (*nmap.Scanner, error) {
 	return nmap.NewScanner(
 		nmap.WithTargets(addresses...),
-		nmap.WithFastMode(),
+		nmap.WithMostCommonPorts(mostCommonPorts),
+		nmap.WithReason(),
 		nmap.WithOSDetection(),
-		nmap.WithMaxParallelism(8),
-		nmap.WithVerbosity(1),
+		nmap.WithMaxParallelism(4),
 	)
 }
 
-func ScanHosts(scanner *nmap.Scanner) (hosts []nmap.Host, jsn []byte, warnings []string, err error) {
+func ScanHosts(addresses []string, mostCommonPorts int) (hosts []Host, warnings []string, err error) {
+	scanner, err := NewHostScaner(addresses, mostCommonPorts)
+	if err != nil {
+		return
+	}
+
 	res, warnings, err := scanner.Run()
 
 	if err != nil {
 		return
 	}
 
-	outputBytes := make([][]byte, 0)
-	outputBytes = append(outputBytes, []byte("["))
-	for _, host := range res.Hosts {
-		if len(host.Addresses) == 0 || len(host.Ports) == 0 {
+	for _, nmapHost := range res.Hosts {
+		if len(nmapHost.Addresses) == 0 || len(nmapHost.Ports) == 0 {
 			continue
 		}
 
-		hosts = append(hosts, host)
+		host := Host{}
 
-		hostJson, err := json.Marshal(host)
+		// formatted as a unix timestamp
+		host.RecordedAt = nmapHost.StartTime.FormatTime()
 
-		if err != nil {
-			return hosts, jsn, warnings, err
+		for _, address := range nmapHost.Addresses {
+			if address.AddrType == "ipv4" {
+				host.IPAddress = address.Addr
+			} else if address.AddrType == "mac" {
+				host.MACAddress = address.Addr
+			}
 		}
 
-		outputBytes = append(outputBytes, hostJson)
-		outputBytes = append(outputBytes, []byte(","))
-	}
-	outputBytes = append(outputBytes, []byte("]"))
+		if len(nmapHost.Hostnames) > 0 {
+			host.Hostname = nmapHost.Hostnames[0].Name
+			host.HostType = nmapHost.Hostnames[0].Type
+		}
 
-	// cleaning up for use as a ts object
-	jsn = bytes.ReplaceAll(bytes.Join(outputBytes, []byte("")), []byte("null"), []byte("undefined"))
+		for _, port := range nmapHost.Ports {
+			host.Ports = append(host.Ports, port.ID)
+		}
+
+		if len(nmapHost.OS.Matches) > 0 {
+			osInfo := nmapHost.OS.Matches[0].Name
+			host.OsName = osInfo[:strings.Index(osInfo, " ")]
+			host.OsVersion = osInfo[strings.Index(osInfo, " ")+1:]
+		}
+
+		hosts = append(hosts, host)
+	}
 
 	return
+}
+
+func hostsToCSV(hosts []Host) []byte {
+	return []byte{}
+}
+
+func hostsToJSON(hosts []Host) []byte {
+	return []byte{}
 }

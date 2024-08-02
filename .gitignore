@@ -1,4 +1,5 @@
 .DS_Store
 network_viewer_gui/src/app/data/*
 go_server/gomap/output.json
+go_server/.env
 
