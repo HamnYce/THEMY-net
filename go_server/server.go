@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"net/http"
 	"server/dbhelper"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -32,35 +33,45 @@ func main() {
 		}
 	}
 
-	// NOTE: deleting rows
-	err = dbhelper.DeleteRow(db, 1)
+	http.HandleFunc("/createHost", CreateHostHandler)
+	http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler)
+	http.HandleFunc("/updateHost", UpdateHostHandler)
+	http.HandleFunc("/deleteHost", DeleteHostHandler)
+
+	err = http.ListenAndServe(":8080", nil)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// NOTE: retrieving rows
-	// rows, err := dbhelper.RetrieveRows(db, 1, 52)
-
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// for _, row := range rows {
-	// 	pretty.Println(row)
-	// }
-
-	// NOTE: updating rows
-	// rowMap := make(map[string]any)
-	// rowMap["Id"] = 2
-	// rowMap["Name"] = "untest"
-	// rowMap["Ip"] = "69.69"
-	// rowsAffected, err := dbhelper.UpdateRow(db, rowMap)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Println("rows affected: ", rowsAffected)
-
 }
+
+// NOTE: deleting rows
+// err = dbhelper.DeleteRow(db, 1)
+// if err != nil {
+// 	log.Fatal(err)
+// }
+
+// NOTE: retrieving rows
+// rows, err := dbhelper.RetrieveRows(db, 1, 52)
+
+// if err != nil {
+// 	log.Fatal(err)
+// }
+
+// for _, row := range rows {
+// 	pretty.Println(row)
+// }
+
+// NOTE: updating rows
+// rowMap := make(map[string]any)
+// rowMap["Id"] = 2
+// rowMap["Name"] = "untest"
+// rowMap["Ip"] = "69.69"
+// rowsAffected, err := dbhelper.UpdateRow(db, rowMap)
+// if err != nil {
+// 	log.Fatal(err)
+// }
+// log.Println("rows affected: ", rowsAffected)
 
 /*
 	// NOTE: creating rows
