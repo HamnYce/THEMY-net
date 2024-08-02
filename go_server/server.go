@@ -32,6 +32,12 @@ func main() {
 		}
 	}
 
+	// NOTE: deleting rows
+	err = dbhelper.DeleteRow(db, 1)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// NOTE: retrieving rows
 	// rows, err := dbhelper.RetrieveRows(db, 1, 52)
 
