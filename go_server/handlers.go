@@ -10,7 +10,7 @@ import (
 )
 
 // TODO: create host handler shoudl be pluralized
-func CreateHostHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
+func CreateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Del("Content-Type")
 		w.Header().Add("Content-Type", "application/json")
