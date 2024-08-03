@@ -9,7 +9,51 @@ import (
 	"strconv"
 )
 
-func CreateHostHandler(w http.ResponseWriter, r *http.Request) {}
+func CreateHostHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Del("Content-Type")
+		w.Header().Add("Content-Type", "application/json")
+		reqJSON := make([]byte, r.ContentLength)
+		resMap := make(map[string]any, 0)
+		resJSON := make([]byte, 0)
+		errors := make([]string, 0)
+		var err error
+
+		if r.Method != http.MethodPost {
+			errors = append(errors, "Only POST method is allowed")
+		}
+
+		// reading request body
+		n, err := r.Body.Read(reqJSON)
+		if n == 0 && err != nil {
+			log.Fatal(err)
+		}
+
+		// parsing request body into resMap
+		err = json.Unmarshal(reqJSON, &resMap)
+		if err != nil {
+			errors = append(errors, "Invalid JSON")
+		}
+
+		if len(errors) == 0 {
+			for _, v := range resMap["rows"].([]any) {
+				row, err := dbhelper.MapToRow(v.(map[string]any))
+				if err != nil {
+					continue
+				}
+				dbhelper.CreateRow(db, row)
+			}
+		}
+
+		resMap["errors"] = errors
+		// converting resMap to resJSON
+		resJSON, err = json.Marshal(resMap)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(resJSON)
+	}
+}
 
 func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +112,6 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 
 		w.Write(resJSON)
 	}
-
 }
 
 func UpdateHostHandler(w http.ResponseWriter, r *http.Request) {}
