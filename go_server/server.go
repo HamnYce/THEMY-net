@@ -51,7 +51,7 @@ func main() {
 	if DEBUG {
 		log.Println("attaching DeleteHost Handler")
 	}
-	http.HandleFunc("/DeleteHost", DeleteHostHandler)
+	http.HandleFunc("/DeleteHosts", DeleteHostsHandler(db))
 
 	if DEBUG {
 		log.Println("Listening on port 8091")
