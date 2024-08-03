@@ -146,13 +146,13 @@ func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 			updatedRows := make([]map[string]any, 0)
 			for _, row := range resMap["rows"].([]any) {
 				err = dbhelper.UpdateRow(db, row.(map[string]any))
-			if err != nil {
-				errors = append(errors, err.Error())
+				if err != nil {
+					errors = append(errors, err.Error())
 					continue
-			}
+				}
 				rowID := int(row.(map[string]any)["Id"].(float64))
-			row, err := dbhelper.RetrieveRow(db, rowID)
-			if err != nil {
+				row, err := dbhelper.RetrieveRow(db, rowID)
+				if err != nil {
 					continue
 				}
 
@@ -176,4 +176,56 @@ func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func DeleteHostHandler(w http.ResponseWriter, r *http.Request) {}
+func DeleteHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Del("Content-Type")
+		w.Header().Add("Content-Type", "application/json")
+		reqJSON := make([]byte, r.ContentLength)
+		resMap := make(map[string]any, 0)
+		resJSON := make([]byte, 0)
+		errors := make([]string, 0)
+		var err error
+
+		if r.Method != http.MethodPost {
+			errors = append(errors, "Only Post method is allowed")
+		}
+
+		// reading request body
+		n, err := r.Body.Read(reqJSON)
+		if n == 0 && err != nil {
+			log.Fatal(err)
+		}
+
+		// parsing request body into resMap
+		err = json.Unmarshal(reqJSON, &resMap)
+		if err != nil {
+			errors = append(errors, "Invalid JSON")
+		}
+
+		deletedRowIDs := make([]int, 0)
+		if len(errors) == 0 {
+			for _, rawRowID := range resMap["rowIDs"].([]any) {
+				rowID := int(rawRowID.(float64))
+				success, err := dbhelper.DeleteRow(db, rowID)
+				if err != nil {
+					errors = append(errors, err.Error())
+					continue
+				}
+
+				if success {
+					deletedRowIDs = append(deletedRowIDs, rowID)
+				}
+			}
+		}
+		resMap["errors"] = errors
+		resMap["deletedRowIDs"] = deletedRowIDs
+		// converting resMap to resJSON
+		resJSON, err = json.Marshal(resMap)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(resJSON)
+	}
+
+}
