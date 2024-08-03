@@ -154,10 +154,18 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (err error) {
 	return
 }
 
-func DeleteRow(db *sql.DB, rowID int) (err error) {
+func DeleteRow(db *sql.DB, rowID int) (success bool, err error) {
 	dbDeleteStatement := "DELETE FROM data WHERE rowid = ?"
-	_, err = db.Exec(dbDeleteStatement, rowID)
-	return
+	res, err := db.Exec(dbDeleteStatement, rowID)
+	if err != nil {
+		return
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return
+	}
+	return rowsAffected > 0, nil
 }
 
 // Scans current row from sql.Rows into dbhelper.Row
