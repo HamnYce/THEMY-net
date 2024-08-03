@@ -9,7 +9,6 @@ import (
 	"strconv"
 )
 
-// TODO: create host handler shoudl be pluralized
 func CreateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Del("Content-Type")
@@ -115,7 +114,6 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-// TODO: updateHost handler should be pluralized and refactored to work with multiple rows
 func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Del("Content-Type")
