@@ -85,6 +85,22 @@ func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 	return res.LastInsertId()
 }
 
+func RetrieveRow(db *sql.DB, rowID int) (row Row, err error) {
+	dbGetStatement := "SELECT rowid, * FROM data WHERE rowid = ?"
+
+	sqlRow, err := db.Query(dbGetStatement, rowID)
+	sqlRow.Next()
+	defer sqlRow.Close()
+
+	if err != nil {
+		return
+	}
+
+	err = ScanRow(sqlRow, &row)
+
+	return
+}
+
 // TODO: abstract out the sql statement generation to make filtering the rows easier
 // or add map[string]any filter argument and just keep it empty if not needed
 // retrieve amount rows from db starting from given offset. if amount == 1, offset acts like index
@@ -106,7 +122,7 @@ func RetrieveRows(db *sql.DB, amount, offset int) (rows []Row, err error) {
 	return
 }
 
-func UpdateRow(db *sql.DB, rowMap map[string]any) (rowsAffected int64, err error) {
+func UpdateRow(db *sql.DB, rowMap map[string]any) (err error) {
 	if rowMap["Id"] == nil {
 		err = errors.New("id is required to update a row")
 		return
@@ -129,11 +145,11 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (rowsAffected int64, err error
 	dbUpdateStatement += strings.Join(updates, ", ")
 	dbUpdateStatement += " WHERE rowid = ?"
 
-	res, err := db.Exec(dbUpdateStatement, values...)
+	_, err = db.Exec(dbUpdateStatement, values...)
 	if err != nil {
 		return
 	}
-	return res.RowsAffected()
+	return
 }
 
 func DeleteRow(db *sql.DB, rowID int) (err error) {
