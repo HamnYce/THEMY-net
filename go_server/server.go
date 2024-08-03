@@ -36,7 +36,7 @@ func main() {
 	if DEBUG {
 		log.Println("attaching createHost Handler")
 	}
-	http.HandleFunc("/createHost", CreateHostHandler)
+	http.HandleFunc("/createHost", CreateHostHandler(db))
 
 	if DEBUG {
 		log.Println("attaching RetrieveHosts Handler")
