@@ -114,6 +114,53 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func UpdateHostHandler(w http.ResponseWriter, r *http.Request) {}
+func UpdateHostHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Del("Content-Type")
+		w.Header().Add("Content-Type", "application/json")
+		reqJSON := make([]byte, r.ContentLength)
+		resMap := make(map[string]any, 0)
+		resJSON := make([]byte, 0)
+		errors := make([]string, 0)
+		var err error
+
+		if r.Method != http.MethodPost {
+			errors = append(errors, "Only POST method is allowed")
+		}
+
+		// reading request body
+		n, err := r.Body.Read(reqJSON)
+		if n == 0 && err != nil {
+			log.Fatal(err)
+		}
+
+		// parsing request body into resMap
+		err = json.Unmarshal(reqJSON, &resMap)
+		if err != nil {
+			errors = append(errors, "Invalid JSON")
+		}
+
+		if len(errors) == 0 {
+			err := dbhelper.UpdateRow(db, resMap["row"].(map[string]any))
+			if err != nil {
+				errors = append(errors, err.Error())
+			}
+			rowID := int(resMap["row"].(map[string]any)["Id"].(float64))
+			row, err := dbhelper.RetrieveRow(db, rowID)
+			if err != nil {
+				errors = append(errors, err.Error())
+			}
+			resMap["row"] = row
+		}
+
+		resMap["errors"] = errors
+		// converting resMap to resJSON
+		resJSON, err = json.Marshal(resMap)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(resJSON)
+	}
+}
 
 func DeleteHostHandler(w http.ResponseWriter, r *http.Request) {}
