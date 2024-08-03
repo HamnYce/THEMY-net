@@ -13,6 +13,8 @@ const (
 	DEBUG = false
 )
 
+// TODO: make CRUD functions into receiver methods for Row struct
+
 type Row struct {
 	Id              *int
 	Name            *string
