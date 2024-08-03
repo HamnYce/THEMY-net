@@ -36,7 +36,7 @@ func main() {
 	if DEBUG {
 		log.Println("attaching createHost Handler")
 	}
-	http.HandleFunc("/createHost", CreateHostHandler(db))
+	http.HandleFunc("/CreateHost", CreateHostHandler(db))
 
 	if DEBUG {
 		log.Println("attaching RetrieveHosts Handler")
@@ -46,12 +46,12 @@ func main() {
 	if DEBUG {
 		log.Println("attaching UpdateHost Handler")
 	}
-	http.HandleFunc("/updateHost", UpdateHostHandler(db))
+	http.HandleFunc("/UpdateHost", UpdateHostHandler(db))
 
 	if DEBUG {
 		log.Println("attaching DeleteHost Handler")
 	}
-	http.HandleFunc("/deleteHost", DeleteHostHandler)
+	http.HandleFunc("/DeleteHost", DeleteHostHandler)
 
 	if DEBUG {
 		log.Println("Listening on port 8091")
