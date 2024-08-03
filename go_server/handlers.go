@@ -116,7 +116,7 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 }
 
 // TODO: updateHost handler should be pluralized and refactored to work with multiple rows
-func UpdateHostHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
+func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Del("Content-Type")
 		w.Header().Add("Content-Type", "application/json")
@@ -143,16 +143,27 @@ func UpdateHostHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		}
 
 		if len(errors) == 0 {
-			err := dbhelper.UpdateRow(db, resMap["row"].(map[string]any))
+			updatedRows := make([]map[string]any, 0)
+			for _, row := range resMap["rows"].([]any) {
+				err = dbhelper.UpdateRow(db, row.(map[string]any))
 			if err != nil {
 				errors = append(errors, err.Error())
+					continue
 			}
-			rowID := int(resMap["row"].(map[string]any)["Id"].(float64))
+				rowID := int(row.(map[string]any)["Id"].(float64))
 			row, err := dbhelper.RetrieveRow(db, rowID)
 			if err != nil {
-				errors = append(errors, err.Error())
+					continue
+				}
+
+				updatedRow, err := dbhelper.RowToMap(row)
+				if err != nil {
+					continue
+				}
+
+				updatedRows = append(updatedRows, updatedRow)
 			}
-			resMap["row"] = row
+			resMap["rows"] = updatedRows
 		}
 
 		resMap["errors"] = errors
