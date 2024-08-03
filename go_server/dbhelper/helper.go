@@ -85,6 +85,8 @@ func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 	return res.LastInsertId()
 }
 
+// TODO: abstract out the sql statement generation to make filtering the rows easier
+// or add map[string]any filter argument and just keep it empty if not needed
 // retrieve amount rows from db starting from given offset. if amount == 1, offset acts like index
 func RetrieveRows(db *sql.DB, amount, offset int) (rows []Row, err error) {
 	dbGetStatement := fmt.Sprintf("SELECT rowid, * FROM data LIMIT %d OFFSET %d", amount, offset)
