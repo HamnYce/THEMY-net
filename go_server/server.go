@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DEBUG = false
+	DEBUG = true
 	SEED  = false
 )
 
@@ -33,12 +33,30 @@ func main() {
 		}
 	}
 
+	if DEBUG {
+		log.Println("attaching createHost Handler")
+	}
 	http.HandleFunc("/createHost", CreateHostHandler)
-	http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler)
+
+	if DEBUG {
+		log.Println("attaching RetrieveHosts Handler")
+	}
+	http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler(db))
+
+	if DEBUG {
+		log.Println("attaching UpdateHost Handler")
+	}
 	http.HandleFunc("/updateHost", UpdateHostHandler)
+
+	if DEBUG {
+		log.Println("attaching DeleteHost Handler")
+	}
 	http.HandleFunc("/deleteHost", DeleteHostHandler)
 
-	err = http.ListenAndServe(":8080", nil)
+	if DEBUG {
+		log.Println("Listening on port 8091")
+	}
+	err = http.ListenAndServe(":8091", nil)
 
 	if err != nil {
 		log.Fatal(err)
