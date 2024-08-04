@@ -2,16 +2,22 @@ package main
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"server/dbhelper"
+	"server/globalhelpers"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/joho/godotenv"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 const (
-	DEBUG = true
-	SEED  = false
+	HOST_IP = "100.68.33.2"
+	PORT    = "8091"
+	SEED    = false
 )
 
 func getDatabaseURL() (url string, err error) {
@@ -31,50 +37,41 @@ func getDatabaseURL() (url string, err error) {
 }
 
 func main() {
-	if DEBUG {
-		log.Println("Starting server with DEBUG on")
-	}
-	db, err := sql.Open("sqlite3", "data.sqlite3")
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	globalhelpers.DebugPrintf("Starting server with DEBUG on")
+
+	url, err := getDatabaseURL()
+	globalhelpers.CheckAndFatal(err)
+
+	db, err := sql.Open("libsql", url)
+	globalhelpers.CheckAndFatal(err)
 	defer db.Close()
 
 	if SEED {
 		log.Println("Seeding database")
 		err = dbhelper.SeedDb(db)
-		if err != nil {
-			log.Fatal(err)
-		}
+		globalhelpers.CheckAndFatal(err)
 	}
 
-	if DEBUG {
-		log.Println("attaching createHost Handler")
-	}
+	globalhelpers.DebugPrintf("attaching createHost Handler\n")
 	http.HandleFunc("/CreateHosts", CreateHostsHandler(db))
+	globalhelpers.DebugPrintf("attached createHost Handler\n")
 
-	if DEBUG {
-		log.Println("attaching RetrieveHosts Handler")
-	}
+	globalhelpers.DebugPrintf("attaching RetrieveHosts Handler\n")
 	http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler(db))
+	globalhelpers.DebugPrintf("attached RetrieveHosts Handler\n")
 
-	if DEBUG {
-		log.Println("attaching UpdateHost Handler")
-	}
+	globalhelpers.DebugPrintf("attaching UpdateHost Handler\n")
 	http.HandleFunc("/UpdateHosts", UpdateHostsHandler(db))
+	globalhelpers.DebugPrintf("attached UpdateHost Handler\n")
 
-	if DEBUG {
-		log.Println("attaching DeleteHost Handler")
-	}
+	globalhelpers.DebugPrintf("attaching DeleteHost Handler\n")
 	http.HandleFunc("/DeleteHosts", DeleteHostsHandler(db))
+	globalhelpers.DebugPrintf("attached DeleteHost Handler\n")
 
-	if DEBUG {
-		log.Println("Listening on port 8091")
-	}
-	err = http.ListenAndServe(":8091", nil)
+	globalhelpers.DebugPrintf("Listening on %s:%s\n", HOST_IP, PORT)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	err = http.ListenAndServe(HOST_IP+":"+PORT, nil)
+
+	globalhelpers.CheckAndFatal(err)
 }
