@@ -222,6 +222,7 @@ func DeleteHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 			}
 		}
 		j.resMap["deletedRowIDs"] = deletedRowIDs
+		delete(j.resMap, "rowIDs")
 
 		j.jSONifyResMap()
 		w.Write(j.resJSON)
