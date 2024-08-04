@@ -19,6 +19,7 @@ type Row struct {
 	Id              *int
 	Name            *string
 	Ip              *string
+	Mac             *string
 	Hostname        *string
 	Status          *bool
 	Exposure        *bool
@@ -173,6 +174,7 @@ func ScanRow(sqlRows *sql.Rows, row *Row) (err error) {
 	err = sqlRows.Scan(
 		&row.Id,
 		&row.Name,
+		&row.Mac,
 		&row.Ip,
 		&row.Hostname,
 		&row.Status,
