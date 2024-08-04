@@ -119,15 +119,18 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 		}
 		j.readAndParseReqJSON(r)
 
+		if j.resMap["limit"] == nil {
+			j.errors = append(j.errors, "Limit not provided")
+		}
+		// j.resMap["limit"] is int
+
+		if j.resMap["offset"] == nil {
+			j.errors = append(j.errors, "Offset not provided")
+		}
+
 		if len(j.errors) == 0 {
-			limit := 0
-			offset := 0
-			if j.resMap["limit"] != nil {
-				limit = int(j.resMap["limit"].(float64))
-			}
-			if j.resMap["offset"] != nil {
-				offset = int(j.resMap["offset"].(float64))
-			}
+			limit := int(j.resMap["limit"].(float64))
+			offset := int(j.resMap["offset"].(float64))
 			rows, err := dbhelper.RetrieveRows(db, limit, offset)
 			if err != nil {
 				j.errors = append(j.errors, err.Error())
@@ -135,6 +138,9 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 				j.resMap["rows"] = rows
 			}
 		}
+
+		delete(j.resMap, "limit")
+		delete(j.resMap, "offset")
 
 		j.jSONifyResMap()
 		w.Write(j.resJSON)
