@@ -1,4 +1,4 @@
-create table data (
+create table hosts (
 	name VARCHAR(50),
 	mac VARCHAR(50),
 	ip VARCHAR(20),
