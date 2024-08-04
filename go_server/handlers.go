@@ -6,148 +6,165 @@ import (
 	"log"
 	"net/http"
 	"server/dbhelper"
-	"strconv"
 )
 
+// struct to hold variables used in all CRUD handlers
+type jSONReqResVars struct {
+	reqJSON []byte
+	resMap  map[string]any
+	resJSON []byte
+	errors  []string
+	err     error
+}
+
+func newJSONReqResVars() *jSONReqResVars {
+	j := new(jSONReqResVars)
+	j.reqJSON = make([]byte, 0)
+	j.resMap = make(map[string]any, 0)
+	j.resJSON = make([]byte, 0)
+	j.errors = make([]string, 0)
+	j.err = nil
+
+	return j
+}
+
+// readReqBody reads request body into jSONReqResVars.reqJSON
+// stores any errors in jSONReqResVars.errors
+func (j *jSONReqResVars) readReqBody(r *http.Request) {
+	var n int
+
+	j.reqJSON = make([]byte, r.ContentLength)
+	n, j.err = r.Body.Read(j.reqJSON)
+	if n == 0 && j.err != nil {
+		j.errors = append(j.errors, j.err.Error())
+	} else {
+		j.err = nil
+	}
+}
+
+// parseResMapIntoResJSON converts reqJSON into resMap
+// stores any errors in jSONReqResVars.errors
+func (j *jSONReqResVars) parseReqJSON() {
+	j.err = json.Unmarshal(j.reqJSON, &j.resMap)
+	if j.err != nil {
+		j.errors = append(j.errors, "Invalid JSON")
+	}
+}
+
+func (j *jSONReqResVars) readAndParseReqJSON(r *http.Request) {
+	j.readReqBody(r)
+	if j.err != nil {
+		j.reqJSON = []byte("{}")
+	}
+	j.parseReqJSON()
+}
+
+func (j *jSONReqResVars) jSONifyResMap() {
+	j.resMap["errors"] = j.errors
+	j.resJSON, j.err = json.Marshal(j.resMap)
+	if j.err != nil {
+		j.resJSON = []byte("{}")
+	}
+}
+
+func setHeaderContentTypeJSON(w *http.ResponseWriter) {
+	(*w).Header().Del("Content-Type")
+	(*w).Header().Add("Content-Type", "application/json")
+}
+
+// takes in json with ["rows"] key containing array of rows to create
+// returns json with ["rows"] key containing array of created rows with all attributes
+// if any error occurs, ["errors"] key will contain array of error messages
 func CreateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Del("Content-Type")
-		w.Header().Add("Content-Type", "application/json")
-		reqJSON := make([]byte, r.ContentLength)
-		resMap := make(map[string]any, 0)
-		resJSON := make([]byte, 0)
-		errors := make([]string, 0)
-		var err error
+		setHeaderContentTypeJSON(&w)
+		j := newJSONReqResVars()
 
 		if r.Method != http.MethodPost {
-			errors = append(errors, "Only POST method is allowed")
+			j.errors = append(j.errors, "Only POST method is allowed")
 		}
+		j.readAndParseReqJSON(r)
 
-		// reading request body
-		n, err := r.Body.Read(reqJSON)
-		if n == 0 && err != nil {
-			log.Fatal(err)
-		}
-
-		// parsing request body into resMap
-		err = json.Unmarshal(reqJSON, &resMap)
-		if err != nil {
-			errors = append(errors, "Invalid JSON")
-		}
-
-		if len(errors) == 0 {
-			for _, v := range resMap["rows"].([]any) {
+		if len(j.errors) == 0 {
+			for _, v := range j.resMap["rows"].([]any) {
 				row, err := dbhelper.MapToRow(v.(map[string]any))
 				if err != nil {
 					continue
 				}
 				dbhelper.CreateRow(db, row)
+				// TODO: return the newly created rows
 			}
+
 		}
 
-		resMap["errors"] = errors
-		// converting resMap to resJSON
-		resJSON, err = json.Marshal(resMap)
-		if err != nil {
-			log.Fatal(err)
+		j.jSONifyResMap()
+		if j.err != nil {
+			log.Fatal(j.err)
+
 		}
-		w.Write(resJSON)
+		w.Write(j.resJSON)
 	}
 }
 
+// takes in json with ["limit"] and ["offset"] keys
+// returns json with ["rows"] key containing array of rows
+// if any error occurs, ["errors"] key will contain array of error messages
 func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Del("Content-Type")
-		w.Header().Add("Content-Type", "application/json")
-		resMap := make(map[string]any, 0)
-		errors := make([]string, 0)
-		limit := 0
-		offset := 0
-		var err error
+		setHeaderContentTypeJSON(&w)
+		j := newJSONReqResVars()
 
-		if r.URL.Query().Has("limit") && r.URL.Query().Has("offset") {
-			limit, err = strconv.Atoi(r.URL.Query().Get("limit"))
-			if err != nil {
-				errors = append(errors, "Invalid limit")
-			} else {
-				if limit < 0 {
-					errors = append(errors, "limit has to be greater or equal to 0")
-				} else {
-					resMap["limit"] = limit
-				}
-			}
-
-			offset, err = strconv.Atoi(r.URL.Query().Get("offset"))
-			if err != nil {
-				errors = append(errors, "Invalid offset")
-			} else {
-				if offset < 0 {
-					errors = append(errors, "offset has to be greater or equal to 0")
-				} else {
-					resMap["offset"] = offset
-				}
-			}
-		} else {
-			errors = append(errors, "Missing limit or offset")
+		if r.Method != http.MethodPost {
+			j.errors = append(j.errors, "Only POST method is allowed")
 		}
+		j.readAndParseReqJSON(r)
 
-		if r.Method != http.MethodGet {
-			errors = append(errors, "Invalid method")
-		}
-
-		if len(errors) == 0 {
+		if len(j.errors) == 0 {
+			limit := 0
+			offset := 0
+			if j.resMap["limit"] != nil {
+				limit = int(j.resMap["limit"].(float64))
+			}
+			if j.resMap["offset"] != nil {
+				offset = int(j.resMap["offset"].(float64))
+			}
 			rows, err := dbhelper.RetrieveRows(db, limit, offset)
 			if err != nil {
-				errors = append(errors, "Error retrieving rows")
+				j.errors = append(j.errors, err.Error())
 			} else {
-				resMap["rows"] = rows
+				j.resMap["rows"] = rows
 			}
 		}
 
-		resMap["errors"] = errors
-		resJSON, err := json.Marshal(resMap)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		w.Write(resJSON)
+		j.jSONifyResMap()
+		w.Write(j.resJSON)
 	}
 }
 
+// takes in json with ["rows"] key containing array of rows to update
+// returns json with ["rows"] key containing array of updated rows with all attributes
+// even if only one attribute is updated
+// if any error occurs, ["errors"] key will contain array of error messages
 func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Del("Content-Type")
-		w.Header().Add("Content-Type", "application/json")
-		reqJSON := make([]byte, r.ContentLength)
-		resMap := make(map[string]any, 0)
-		resJSON := make([]byte, 0)
-		errors := make([]string, 0)
-		var err error
+		setHeaderContentTypeJSON(&w)
+		j := newJSONReqResVars()
 
 		if r.Method != http.MethodPost {
-			errors = append(errors, "Only POST method is allowed")
+			j.errors = append(j.errors, "Only POST method is allowed")
 		}
+		j.readAndParseReqJSON(r)
 
-		// reading request body
-		n, err := r.Body.Read(reqJSON)
-		if n == 0 && err != nil {
-			log.Fatal(err)
-		}
-
-		// parsing request body into resMap
-		err = json.Unmarshal(reqJSON, &resMap)
-		if err != nil {
-			errors = append(errors, "Invalid JSON")
-		}
-
-		if len(errors) == 0 {
+		if len(j.errors) == 0 {
 			updatedRows := make([]map[string]any, 0)
-			for _, row := range resMap["rows"].([]any) {
-				err = dbhelper.UpdateRow(db, row.(map[string]any))
+			for _, row := range j.resMap["rows"].([]any) {
+				err := dbhelper.UpdateRow(db, row.(map[string]any))
 				if err != nil {
-					errors = append(errors, err.Error())
+					j.errors = append(j.errors, err.Error())
 					continue
 				}
+
+				// Retrievig newly constructed row
 				rowID := int(row.(map[string]any)["Id"].(float64))
 				row, err := dbhelper.RetrieveRow(db, rowID)
 				if err != nil {
@@ -161,53 +178,35 @@ func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 
 				updatedRows = append(updatedRows, updatedRow)
 			}
-			resMap["rows"] = updatedRows
+			j.resMap["rows"] = updatedRows
 		}
 
-		resMap["errors"] = errors
 		// converting resMap to resJSON
-		resJSON, err = json.Marshal(resMap)
-		if err != nil {
-			log.Fatal(err)
-		}
-		w.Write(resJSON)
+		j.jSONifyResMap()
+		w.Write(j.resJSON)
 	}
 }
 
+// takes in json with ["rowIDs"] key containing array of rowIDs to delete
+// returns json with ["deletedRowIDs"] key containing array of rowIDs that were successfully deleted
+// if any error occurs, ["errors"] key will contain array of error messages
 func DeleteHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		w.Header().Del("Content-Type")
-		w.Header().Add("Content-Type", "application/json")
-		reqJSON := make([]byte, r.ContentLength)
-		resMap := make(map[string]any, 0)
-		resJSON := make([]byte, 0)
-		errors := make([]string, 0)
-		var err error
+		setHeaderContentTypeJSON(&w)
+		j := newJSONReqResVars()
 
 		if r.Method != http.MethodPost {
-			errors = append(errors, "Only Post method is allowed")
+			j.errors = append(j.errors, "Only Post method is allowed")
 		}
-
-		// reading request body
-		n, err := r.Body.Read(reqJSON)
-		if n == 0 && err != nil {
-			log.Fatal(err)
-		}
-
-		// parsing request body into resMap
-		err = json.Unmarshal(reqJSON, &resMap)
-		if err != nil {
-			errors = append(errors, "Invalid JSON")
-		}
+		j.readAndParseReqJSON(r)
 
 		deletedRowIDs := make([]int, 0)
-		if len(errors) == 0 {
-			for _, rawRowID := range resMap["rowIDs"].([]any) {
+		if len(j.errors) == 0 {
+			for _, rawRowID := range j.resMap["rowIDs"].([]any) {
 				rowID := int(rawRowID.(float64))
 				success, err := dbhelper.DeleteRow(db, rowID)
 				if err != nil {
-					errors = append(errors, err.Error())
+					j.errors = append(j.errors, err.Error())
 					continue
 				}
 
@@ -216,14 +215,9 @@ func DeleteHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 				}
 			}
 		}
-		resMap["errors"] = errors
-		resMap["deletedRowIDs"] = deletedRowIDs
-		// converting resMap to resJSON
-		resJSON, err = json.Marshal(resMap)
-		if err != nil {
-			log.Fatal(err)
-		}
-		w.Write(resJSON)
-	}
+		j.resMap["deletedRowIDs"] = deletedRowIDs
 
+		j.jSONifyResMap()
+		w.Write(j.resJSON)
+	}
 }
