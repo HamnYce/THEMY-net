@@ -14,6 +14,22 @@ const (
 	SEED  = false
 )
 
+func getDatabaseURL() (url string, err error) {
+	godotenv.Load(".env.local")
+	databaseUrl := os.Getenv("TURSO_DATABASE_URL")
+	databaseToken := os.Getenv("TURSO_AUTH_TOKEN")
+
+	globalhelpers.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
+	globalhelpers.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
+
+	url = fmt.Sprintf("%s?authToken=%s",
+		databaseUrl,
+		databaseToken,
+	)
+
+	return
+}
+
 func main() {
 	if DEBUG {
 		log.Println("Starting server with DEBUG on")
