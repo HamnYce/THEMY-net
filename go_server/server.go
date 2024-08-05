@@ -25,8 +25,13 @@ func getDatabaseURL() (url string, err error) {
 	databaseUrl := os.Getenv("TURSO_DATABASE_URL")
 	databaseToken := os.Getenv("TURSO_AUTH_TOKEN")
 
+	if databaseUrl == "" {
 	globalhelpers.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
+	}
+
+	if databaseToken == "" {
 	globalhelpers.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
+	}
 
 	url = fmt.Sprintf("%s?authToken=%s",
 		databaseUrl,
