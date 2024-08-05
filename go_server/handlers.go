@@ -115,12 +115,12 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 		if r.Method != http.MethodPost {
 			j.errors = append(j.errors, "Only POST method is allowed")
 		}
+
 		j.readAndParseReqJSON(r)
 
 		if j.resMap["limit"] == nil {
 			j.errors = append(j.errors, "Limit not provided")
 		}
-		// j.resMap["limit"] is int
 
 		if j.resMap["offset"] == nil {
 			j.errors = append(j.errors, "Offset not provided")
