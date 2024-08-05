@@ -96,14 +96,14 @@ func RetrieveRow(db *sql.DB, rowID int) (row Row, err error) {
 
 	globalhelpers.DebugPrintf("Executing RetrieveRow Statement\n")
 	sqlRow, err := db.Query(dbGetStatement, rowID)
-	sqlRow.Next()
-	defer sqlRow.Close()
-
 	if err != nil {
 		return
 	}
+	defer sqlRow.Close()
 
-	err = ScanRow(sqlRow, &row)
+	if sqlRow.Next() {
+		err = ScanRow(sqlRow, &row)
+	}
 
 	return
 }
@@ -116,12 +116,13 @@ func RetrieveRows(db *sql.DB, amount, offset int) (rows []Row, err error) {
 
 	globalhelpers.DebugPrintf("Executing RetrieveRows Statement\n")
 	sqlRows, err := db.Query(dbGetStatement)
+	globalhelpers.DebugPrintf("Executed RetrieveRows Statement\n")
 
 	for sqlRows.Next() {
 		row := new(Row)
 		err = ScanRow(sqlRows, row)
 		if err != nil {
-			return
+			continue
 		}
 
 		rows = append(rows, *row)
@@ -179,7 +180,8 @@ func DeleteRow(db *sql.DB, rowID int) (success bool, err error) {
 
 // Scans current row from sql.Rows into dbhelper.Row
 func ScanRow(sqlRows *sql.Rows, row *Row) (err error) {
-	err = sqlRows.Scan(
+	globalhelpers.DebugPrintf("Scanning Row\n")
+	return sqlRows.Scan(
 		&row.Id,
 		&row.Name,
 		&row.Mac,
@@ -206,12 +208,6 @@ func ScanRow(sqlRows *sql.Rows, row *Row) (err error) {
 		&row.RamGB,
 		&row.StorageGB,
 	)
-
-	if err != nil {
-		return
-	}
-
-	return
 }
 
 func MapToRow(rowMap map[string]any) (row Row, err error) {
