@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"server/globalhelpers"
 	"strings"
 )
 
@@ -44,6 +45,7 @@ type Row struct {
 }
 
 func FetchRowCount(db *sql.DB) (rowCount int) {
+	globalhelpers.DebugPrintf("Executing FetchRowCount DB Statement")
 	row := db.QueryRow("SELECT COUNT(*) FROM data")
 
 	row.Scan(&rowCount)
@@ -79,6 +81,7 @@ func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 		log.Println("CreateRow: ", dbCreateStatement)
 	}
 
+	globalhelpers.DebugPrintf("Executing CreateRow Statement\n")
 	res, err := db.Exec(dbCreateStatement, values...)
 
 	if err != nil {
@@ -91,6 +94,7 @@ func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 func RetrieveRow(db *sql.DB, rowID int) (row Row, err error) {
 	dbGetStatement := "SELECT rowid, * FROM data WHERE rowid = ?"
 
+	globalhelpers.DebugPrintf("Executing RetrieveRow Statement\n")
 	sqlRow, err := db.Query(dbGetStatement, rowID)
 	sqlRow.Next()
 	defer sqlRow.Close()
@@ -110,6 +114,7 @@ func RetrieveRow(db *sql.DB, rowID int) (row Row, err error) {
 func RetrieveRows(db *sql.DB, amount, offset int) (rows []Row, err error) {
 	dbGetStatement := fmt.Sprintf("SELECT rowid, * FROM data LIMIT %d OFFSET %d", amount, offset)
 
+	globalhelpers.DebugPrintf("Executing RetrieveRows Statement\n")
 	sqlRows, err := db.Query(dbGetStatement)
 
 	for sqlRows.Next() {
@@ -148,6 +153,7 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (err error) {
 	dbUpdateStatement += strings.Join(updates, ", ")
 	dbUpdateStatement += " WHERE rowid = ?"
 
+	globalhelpers.DebugPrintf("Executing UpdateRow Statement\n")
 	_, err = db.Exec(dbUpdateStatement, values...)
 	if err != nil {
 		return
@@ -157,6 +163,8 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (err error) {
 
 func DeleteRow(db *sql.DB, rowID int) (success bool, err error) {
 	dbDeleteStatement := "DELETE FROM data WHERE rowid = ?"
+
+	globalhelpers.DebugPrintf("Executing DeleteRow Statement\n")
 	res, err := db.Exec(dbDeleteStatement, rowID)
 	if err != nil {
 		return
