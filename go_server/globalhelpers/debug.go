@@ -2,8 +2,9 @@ package globalhelpers
 
 import "log"
 
-const (
-	DEBUG = true
+var (
+	DEBUG = false
+	SEED  = false
 )
 
 func DebugPrintf(format string, args ...any) {
