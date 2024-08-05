@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,10 +15,9 @@ import (
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
-const (
-	HOST_IP = "100.68.33.2"
-	PORT    = "8091"
-	SEED    = false
+var (
+	HOST_IP string
+	PORT    string
 )
 
 func getDatabaseURL() (url string, err error) {
@@ -36,7 +36,17 @@ func getDatabaseURL() (url string, err error) {
 	return
 }
 
+func processFlags() {
+	flag.BoolVar(&globalhelpers.DEBUG, "D", false, "Enable debug mode")
+	flag.BoolVar(&globalhelpers.SEED, "seed", false, "Enable permanent seeding of the database")
+	flag.StringVar(&HOST_IP, "host", "127.0.0.1", "Host IP to listen on")
+	flag.StringVar(&PORT, "port", "8080", "Port to listen on")
+	flag.Parse()
+}
+
 func main() {
+	// TODO: test with turso
+	processFlags()
 
 	globalhelpers.DebugPrintf("Starting server with DEBUG on")
 
@@ -47,7 +57,7 @@ func main() {
 	globalhelpers.CheckAndFatal(err)
 	defer db.Close()
 
-	if SEED {
+	if globalhelpers.SEED {
 		log.Println("Seeding database")
 		err = dbhelper.SeedDb(db)
 		globalhelpers.CheckAndFatal(err)
