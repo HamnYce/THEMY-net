@@ -26,11 +26,11 @@ func getDatabaseURL() (url string, err error) {
 	databaseToken := os.Getenv("TURSO_AUTH_TOKEN")
 
 	if databaseUrl == "" {
-	globalhelpers.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
+		globalhelpers.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
 	}
 
 	if databaseToken == "" {
-	globalhelpers.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
+		globalhelpers.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
 	}
 
 	url = fmt.Sprintf("%s?authToken=%s",
@@ -68,21 +68,33 @@ func main() {
 		globalhelpers.CheckAndFatal(err)
 	}
 
-	globalhelpers.DebugPrintf("attaching createHost Handler\n")
-	http.HandleFunc("/CreateHosts", CreateHostsHandler(db))
-	globalhelpers.DebugPrintf("attached createHost Handler\n")
+	// attach createHosts handler
+	{
+		globalhelpers.DebugPrintf("attaching createHost Handler\n")
+		http.HandleFunc("/CreateHosts", CreateHostsHandler(db))
+		globalhelpers.DebugPrintf("attached createHost Handler\n")
+	}
 
-	globalhelpers.DebugPrintf("attaching RetrieveHosts Handler\n")
-	http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler(db))
-	globalhelpers.DebugPrintf("attached RetrieveHosts Handler\n")
+	// attach RetrieveHosts handler
+	{
+		globalhelpers.DebugPrintf("attaching RetrieveHosts Handler\n")
+		http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler(db))
+		globalhelpers.DebugPrintf("attached RetrieveHosts Handler\n")
+	}
 
-	globalhelpers.DebugPrintf("attaching UpdateHost Handler\n")
-	http.HandleFunc("/UpdateHosts", UpdateHostsHandler(db))
-	globalhelpers.DebugPrintf("attached UpdateHost Handler\n")
+	// attach UpdateHosts handler
+	{
+		globalhelpers.DebugPrintf("attaching UpdateHost Handler\n")
+		http.HandleFunc("/UpdateHosts", UpdateHostsHandler(db))
+		globalhelpers.DebugPrintf("attached UpdateHost Handler\n")
+	}
 
-	globalhelpers.DebugPrintf("attaching DeleteHost Handler\n")
-	http.HandleFunc("/DeleteHosts", DeleteHostsHandler(db))
-	globalhelpers.DebugPrintf("attached DeleteHost Handler\n")
+	// attach DeleteHosts handler
+	{
+		globalhelpers.DebugPrintf("attaching DeleteHost Handler\n")
+		http.HandleFunc("/DeleteHosts", DeleteHostsHandler(db))
+		globalhelpers.DebugPrintf("attached DeleteHost Handler\n")
+	}
 
 	globalhelpers.DebugPrintf("Listening on %s:%s\n", HOST_IP, PORT)
 
