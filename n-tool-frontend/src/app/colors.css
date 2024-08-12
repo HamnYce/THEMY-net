@@ -37,9 +37,10 @@
     /* Dark Mode Colors for DataDiagram*/
     --DD-bg-color: #121212; 
     --DD-card-bg-color: #1e1e1e; 
-    --DD-edge-color: #ff5722; 
+    --DD-edge-color: #ffffff; 
     --DD-edge-marker-color: #ff5722; 
     --DD-text-color: #e0e0e0; 
+    --DD-subText-color: #c0c0c0;
 
   }
   .light {
@@ -79,9 +80,10 @@
   
    --DD-bg-color: #f0f0f0; 
    --DD-card-bg-color: #ffffff; 
-   --DD-edge-color: #ff5722; 
+   --DD-edge-color: #000000; 
    --DD-edge-marker-color: #ff5722; 
    --DD-text-color: #333333; 
+   --DD-subText-color: #666666;
 
 }
 

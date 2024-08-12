@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import DataDiagram from '@/components/ui/data-diagram'; // Ensure the path is correct
+import DataDiagram from '@/components/dataDiagram/dataDiagram'; // Ensure the path is correct
 import { fetchDataFromJson } from '@/utils/resultsUtils';
 import { formatCellValue } from '@/utils/resultsParser';
 
