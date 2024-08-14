@@ -1,9 +1,9 @@
-module main
+module themynet
 
 go 1.22.5
 
 require (
-	github.com/joho/godotenv v1.5.1
+	github.com/BurntSushi/toml v1.4.0
 	github.com/tursodatabase/libsql-client-go v0.0.0-20240812094001-348a4e45b535
 )
 

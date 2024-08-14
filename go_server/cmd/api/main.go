@@ -1,17 +1,16 @@
-package main
+package cmd_api
 
 import (
 	"database/sql"
 	"errors"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"server/dbhelper"
-	"server/globalhelpers"
+	handlers "themynet/api/v1/handlers"
+  debug "themynet/internal/debug"
+  dbhelper "themynet/internal/db"
 
-	"github.com/joho/godotenv"
+	"github.com/BurntSushi/toml"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
@@ -20,85 +19,85 @@ var (
 	PORT    string
 )
 
-func getDatabaseURL() (url string, err error) {
-	godotenv.Load(".env.local")
-	databaseUrl := os.Getenv("TURSO_DATABASE_URL")
-	databaseToken := os.Getenv("TURSO_AUTH_TOKEN")
+func getTursoURLFromToml() (url string, err error) {
+	var tomlMap map[string]any
+	toml.DecodeFile("env.toml", &tomlMap)
 
-	if databaseUrl == "" {
-		globalhelpers.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
+	if tomlMap["TURSO"] == nil {
+		return url, errors.New("Turso not in env.toml")
+	}
+	tursoMap := tomlMap["TURSO"].(map[string]any)
+
+	if tursoMap["TURSO_DATABASE_URL"] == nil {
+		debug.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
 	}
 
-	if databaseToken == "" {
-		globalhelpers.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
+	if tursoMap["TURSO_AUTH_TOKEN"] == nil {
+		debug.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
 	}
 
 	url = fmt.Sprintf("%s?authToken=%s",
-		databaseUrl,
-		databaseToken,
+		tursoMap["TURSO_DATABASE_URL"],
+		tursoMap["TURSO_AUTH_TOKEN"],
 	)
 
 	return
 }
 
-func processFlags() {
-	flag.BoolVar(&globalhelpers.DEBUG, "D", false, "Enable debug mode")
-	flag.BoolVar(&globalhelpers.SEED, "seed", false, "Enable permanent seeding of the database")
-	flag.StringVar(&HOST_IP, "host", "127.0.0.1", "Host IP to listen on")
-	flag.StringVar(&PORT, "port", "8080", "Port to listen on")
-	flag.Parse()
+func configWithToml() {
+  // TODO: get information about debug and such from the toml file
+  //  set debug and seed here
+  log.Fatal("Implement this. at the moment its just setting debug debug for the api section")
 }
 
-func main() {
-	// TODO: test with turso
-	processFlags()
+func Main() {
+	// FIXME: test with turso
+	debug.DebugPrintf("Starting server with DEBUG on")
 
-	globalhelpers.DebugPrintf("Starting server with DEBUG on")
-
-	url, err := getDatabaseURL()
-	globalhelpers.CheckAndFatal(err)
+	url, err := getTursoURLFromToml()
+	debug.CheckAndFatal(err)
 
 	db, err := sql.Open("libsql", url)
-	globalhelpers.CheckAndFatal(err)
+	debug.CheckAndFatal(err)
 	defer db.Close()
 
-	if globalhelpers.SEED {
+	if debug.SEED {
 		log.Println("Seeding database")
 		err = dbhelper.SeedDb(db)
-		globalhelpers.CheckAndFatal(err)
+		debug.CheckAndFatal(err)
 	}
 
 	// attach createHosts handler
 	{
-		globalhelpers.DebugPrintf("attaching createHost Handler\n")
-		http.HandleFunc("/CreateHosts", CreateHostsHandler(db))
-		globalhelpers.DebugPrintf("attached createHost Handler\n")
+		debug.DebugPrintf("attaching createHost Handler\n")
+		http.HandleFunc("/CreateHosts", handlers.CreateHostsHandler(db))
+		debug.DebugPrintf("attached createHost Handler\n")
 	}
 
 	// attach RetrieveHosts handler
 	{
-		globalhelpers.DebugPrintf("attaching RetrieveHosts Handler\n")
-		http.HandleFunc("/RetrieveHosts", RetrieveHostsHandler(db))
-		globalhelpers.DebugPrintf("attached RetrieveHosts Handler\n")
+		debug.DebugPrintf("attaching RetrieveHosts Handler\n")
+		http.HandleFunc("/RetrieveHosts", handlers.RetrieveHostsHandler(db))
+		debug.DebugPrintf("attached RetrieveHosts Handler\n")
 	}
 
 	// attach UpdateHosts handler
 	{
-		globalhelpers.DebugPrintf("attaching UpdateHost Handler\n")
-		http.HandleFunc("/UpdateHosts", UpdateHostsHandler(db))
-		globalhelpers.DebugPrintf("attached UpdateHost Handler\n")
+		debug.DebugPrintf("attaching UpdateHost Handler\n")
+		http.HandleFunc("/UpdateHosts", handlers.UpdateHostsHandler(db))
+		debug.DebugPrintf("attached UpdateHost Handler\n")
 	}
 
 	// attach DeleteHosts handler
 	{
-		globalhelpers.DebugPrintf("attaching DeleteHost Handler\n")
-		http.HandleFunc("/DeleteHosts", DeleteHostsHandler(db))
-		globalhelpers.DebugPrintf("attached DeleteHost Handler\n")
+		debug.DebugPrintf("attaching DeleteHost Handler\n")
+		http.HandleFunc("/DeleteHosts", handlers.DeleteHostsHandler(db))
+		debug.DebugPrintf("attached DeleteHost Handler\n")
 	}
 
-	globalhelpers.DebugPrintf("Listening on %s:%s\n", HOST_IP, PORT)
+	debug.DebugPrintf("Listening on %s:%s\n", HOST_IP, PORT)
 
 	err = http.ListenAndServe(HOST_IP+":"+PORT, nil)
 
-	globalhelpers.CheckAndFatal(err)
+	debug.CheckAndFatal(err)
 }

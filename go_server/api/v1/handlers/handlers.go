@@ -1,11 +1,11 @@
-package main
+package api_v1_handlers
 
 import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
-	"server/dbhelper"
-	"server/globalhelpers"
+	dbhelper "themynet/internal/db"
+  debug "themynet/internal/debug"
 )
 
 // struct to hold variables used in all CRUD handlers
@@ -98,7 +98,7 @@ func CreateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 		}
 
 		j.jSONifyResMap()
-		globalhelpers.CheckAndFatal(j.err)
+		debug.CheckAndFatal(j.err)
 
 		w.Write(j.resJSON)
 	}
@@ -141,7 +141,7 @@ func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Reques
 		delete(j.resMap, "offset")
 
 		j.jSONifyResMap()
-		globalhelpers.CheckAndFatal(j.err)
+		debug.CheckAndFatal(j.err)
 		w.Write(j.resJSON)
 	}
 }
@@ -188,7 +188,7 @@ func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 
 		// converting resMap to resJSON
 		j.jSONifyResMap()
-		globalhelpers.CheckAndFatal(j.err)
+		debug.CheckAndFatal(j.err)
 		w.Write(j.resJSON)
 	}
 }
@@ -225,7 +225,7 @@ func DeleteHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request)
 		delete(j.resMap, "rowIDs")
 
 		j.jSONifyResMap()
-		globalhelpers.CheckAndFatal(j.err)
+		debug.CheckAndFatal(j.err)
 		w.Write(j.resJSON)
 	}
 }
