@@ -7,3 +7,4 @@ go_server/.env.local
 go_server/build/*
 go_server/data.sqlite3
 go_server/go.sum
+go_server/env.toml
