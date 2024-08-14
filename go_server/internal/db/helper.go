@@ -1,51 +1,22 @@
-package dbhelper
+package internal_db
 
 import (
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
-	"server/globalhelpers"
 	"strings"
-)
+	debug "themynet/internal/debug"
 
-const (
-	DEBUG = false
+  model "themynet/internal/model"
 )
 
 // TODO: make CRUD functions into receiver methods for Row struct
 
-type Row struct {
-	Id              *int
-	Name            *string
-	Ip              *string
-	Mac             *string
-	Hostname        *string
-	Status          *bool
-	Exposure        *bool
-	InternetAccess  *bool
-	Os              *string
-	OsVersion       *string
-	Ports           *string
-	Usage           *string
-	Location        *string
-	Owners          *string
-	Dependencies    *string
-	CreatedAt       *string
-	CreatedBy       *string
-	RecordedAt      *string
-	Access          *string
-	ConnectsTo      *string
-	HostType        *string
-	ExposedServices *string
-	CpuCores        *int
-	RamGB           *int
-	StorageGB       *int
-}
+
 
 func FetchRowCount(db *sql.DB) (rowCount int) {
-	globalhelpers.DebugPrintf("Executing FetchRowCount DB Statement")
+	debug.DebugPrintf("Executing FetchRowCount DB Statement")
 	row := db.QueryRow("SELECT COUNT(*) FROM data")
 
 	row.Scan(&rowCount)
@@ -54,7 +25,7 @@ func FetchRowCount(db *sql.DB) (rowCount int) {
 }
 
 // Creates a row and returns the rowID
-func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
+func CreateRow(db *sql.DB, row model.Host) (rowID int64, err error) {
 	rowMap, err := RowToMap(row)
 	if err != nil {
 		return
@@ -77,11 +48,7 @@ func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 		strings.Join(strings.Split(strings.Repeat("?", len(columns)), ""), ","),
 	)
 
-	if DEBUG {
-		log.Println("CreateRow: ", dbCreateStatement)
-	}
-
-	globalhelpers.DebugPrintf("Executing CreateRow Statement\n")
+	debug.DebugPrintf("Executing CreateRow Statement\n")
 	res, err := db.Exec(dbCreateStatement, values...)
 
 	if err != nil {
@@ -91,10 +58,10 @@ func CreateRow(db *sql.DB, row Row) (rowID int64, err error) {
 	return res.LastInsertId()
 }
 
-func RetrieveRow(db *sql.DB, rowID int) (row Row, err error) {
+func RetrieveRow(db *sql.DB, rowID int) (row model.Host, err error) {
 	dbGetStatement := "SELECT rowid, * FROM data WHERE rowid = ?"
 
-	globalhelpers.DebugPrintf("Executing RetrieveRow Statement\n")
+	debug.DebugPrintf("Executing RetrieveRow Statement\n")
 	sqlRow, err := db.Query(dbGetStatement, rowID)
 	if err != nil {
 		return
@@ -111,15 +78,15 @@ func RetrieveRow(db *sql.DB, rowID int) (row Row, err error) {
 // TODO: abstract out the sql statement generation to make filtering the rows easier
 // or add map[string]any filter argument and just keep it empty if not needed
 // retrieve amount rows from db starting from given offset. if amount == 1, offset acts like index
-func RetrieveRows(db *sql.DB, amount, offset int) (rows []Row, err error) {
+func RetrieveRows(db *sql.DB, amount, offset int) (rows []model.Host, err error) {
 	dbGetStatement := fmt.Sprintf("SELECT rowid, * FROM data LIMIT %d OFFSET %d", amount, offset)
 
-	globalhelpers.DebugPrintf("Executing RetrieveRows Statement\n")
+	debug.DebugPrintf("Executing RetrieveRows Statement\n")
 	sqlRows, err := db.Query(dbGetStatement)
-	globalhelpers.DebugPrintf("Executed RetrieveRows Statement\n")
+	debug.DebugPrintf("Executed RetrieveRows Statement\n")
 
 	for sqlRows.Next() {
-		row := new(Row)
+		row := new(model.Host)
 		err = ScanRow(sqlRows, row)
 		if err != nil {
 			continue
@@ -154,7 +121,7 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (err error) {
 	dbUpdateStatement += strings.Join(updates, ", ")
 	dbUpdateStatement += " WHERE rowid = ?"
 
-	globalhelpers.DebugPrintf("Executing UpdateRow Statement\n")
+	debug.DebugPrintf("Executing UpdateRow Statement\n")
 	_, err = db.Exec(dbUpdateStatement, values...)
 	if err != nil {
 		return
@@ -165,7 +132,7 @@ func UpdateRow(db *sql.DB, rowMap map[string]any) (err error) {
 func DeleteRow(db *sql.DB, rowID int) (success bool, err error) {
 	dbDeleteStatement := "DELETE FROM data WHERE rowid = ?"
 
-	globalhelpers.DebugPrintf("Executing DeleteRow Statement\n")
+	debug.DebugPrintf("Executing DeleteRow Statement\n")
 	res, err := db.Exec(dbDeleteStatement, rowID)
 	if err != nil {
 		return
@@ -179,8 +146,8 @@ func DeleteRow(db *sql.DB, rowID int) (success bool, err error) {
 }
 
 // Scans current row from sql.Rows into dbhelper.Row
-func ScanRow(sqlRows *sql.Rows, row *Row) (err error) {
-	globalhelpers.DebugPrintf("Scanning Row\n")
+func ScanRow(sqlRows *sql.Rows, row *model.Host) (err error) {
+	debug.DebugPrintf("Scanning Row\n")
 	return sqlRows.Scan(
 		&row.Id,
 		&row.Name,
@@ -210,7 +177,7 @@ func ScanRow(sqlRows *sql.Rows, row *Row) (err error) {
 	)
 }
 
-func MapToRow(rowMap map[string]any) (row Row, err error) {
+func MapToRow(rowMap map[string]any) (row model.Host, err error) {
 	jsonRow, err := json.Marshal(rowMap)
 	if err != nil {
 		return
@@ -219,7 +186,7 @@ func MapToRow(rowMap map[string]any) (row Row, err error) {
 	return
 }
 
-func RowToMap(row Row) (rowMap map[string]any, err error) {
+func RowToMap(row model.Host) (rowMap map[string]any, err error) {
 	jsonRow, err := json.Marshal(row)
 	if err != nil {
 		return

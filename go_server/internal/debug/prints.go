@@ -1,5 +1,4 @@
-package globalhelpers
-
+package internal_debug
 import "log"
 
 var (
@@ -13,8 +12,3 @@ func DebugPrintf(format string, args ...any) {
 	}
 }
 
-func CheckAndFatal(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
