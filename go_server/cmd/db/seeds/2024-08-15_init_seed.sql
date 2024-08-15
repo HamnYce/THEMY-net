@@ -1,29 +1,3 @@
-create table hosts (
-	name VARCHAR(50),
-	mac VARCHAR(50),
-	ip VARCHAR(20),
-	hostname VARCHAR(50),
-	status INT,
-	exposure INT,
-	internetAccess INT,
-	os VARCHAR(8),
-	osVersion VARCHAR(6),
-	ports VARCHAR(5),
-	usage VARCHAR(9),
-	location VARCHAR(50),
-	owners VARCHAR(50),
-	dependencies VARCHAR(10),
-	createdAt DATE,
-	createdBy VARCHAR(50),
-	recordedAt DATE,
-	access VARCHAR(50),
-	connectsTo VARCHAR(50),
-	hostType VARCHAR(8),
-	exposedServices VARCHAR(6),
-	cpuCores INT,
-	ramGB INT,
-	storageGB INT
-);
 insert into data (name, mac, ip, hostname, status, exposure, internetAccess, os, osVersion, ports, usage, location, owners, dependencies, createdAt, createdBy, recordedAt, access, connectsTo, hostType, exposedServices, cpuCores, ramGB, storageGB) values ('Ive Krochmann', '81-DB-AA-2A-17-3B', '197.48.160.182', 'it.paginegialle.Prodder', 0, 0, 1, 'Android', '10.3.2', '[12825, 13875, 53897, 16516, 40011, 63551, 51941, 43451]', '[]', 'Suite 77', null, '["mysql", "nodejs", "postgres", "python", "go", "postgres", "rust"]', '2023-09-12T17:30:11Z', 'Rozina', '2024-06-18T22:30:05Z', 'Ive', 'soup.io', 'physical', '["ssh", "https"]', 88, 489, 2921);
 insert into data (name, mac, ip, hostname, status, exposure, internetAccess, os, osVersion, ports, usage, location, owners, dependencies, createdAt, createdBy, recordedAt, access, connectsTo, hostType, exposedServices, cpuCores, ramGB, storageGB) values ('Rita Jeacocke', '48-AD-86-56-08-0E', '86.25.244.126', 'jp.co.amazon.Wrapsafe', 0, 1, 1, 'Windows', '10.3.2', '[57293, 29177, 12664, 47576, 31389, 19835, 60357, 925, 8210, 8905, 64026, 24363]', '[]', '7th Floor', null, '["go"]', '2024-03-09T02:43:21Z', 'Florella', '2023-08-29T08:17:30Z', 'Rita', 'cmu.edu', 'physical', '["http", "tcp", "ssh"]', 10, 199, 4530);
 insert into data (name, mac, ip, hostname, status, exposure, internetAccess, os, osVersion, ports, usage, location, owners, dependencies, createdAt, createdBy, recordedAt, access, connectsTo, hostType, exposedServices, cpuCores, ramGB, storageGB) values ('Freddy Caberas', 'AE-1A-0E-74-C2-74', '114.27.126.167', 'com.photobucket.Otcom', 1, 1, 1, 'Fedora', '8.1.4', '[64667, 38527, 4132, 47319, 18748, 40328, 17099, 56463, 54479, 10623]', '["websever"]', '19th Floor', '[]', '[]', '2024-03-11T14:10:06Z', 'Joletta', '2024-07-24T14:39:39Z', 'Freddy', 'npr.org', 'physical', '["http", "ssh"]', 34, 854, 9302);
