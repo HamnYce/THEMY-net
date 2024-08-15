@@ -1,4 +1,4 @@
-package cmd_api
+package main
 
 import (
 	"database/sql"
@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 	handlers "themynet/api/v1/handlers"
-  debug "themynet/internal/debug"
-  dbhelper "themynet/internal/db"
+	dbhelper "themynet/internal/db"
+	debug "themynet/internal/debug"
 
 	"github.com/BurntSushi/toml"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
@@ -45,12 +45,12 @@ func getTursoURLFromToml() (url string, err error) {
 }
 
 func configWithToml() {
-  // TODO: get information about debug and such from the toml file
-  //  set debug and seed here
-  log.Fatal("Implement this. at the moment its just setting debug debug for the api section")
+	// TODO: get information about debug and such from the toml file
+	//  set debug and seed here
+	log.Fatal("Implement this. at the moment its just setting debug debug for the api section")
 }
 
-func Main() {
+func main() {
 	// FIXME: test with turso
 	debug.DebugPrintf("Starting server with DEBUG on")
 
@@ -60,12 +60,6 @@ func Main() {
 	db, err := sql.Open("libsql", url)
 	debug.CheckAndFatal(err)
 	defer db.Close()
-
-	if debug.SEED {
-		log.Println("Seeding database")
-		err = dbhelper.SeedDb(db)
-		debug.CheckAndFatal(err)
-	}
 
 	// attach createHosts handler
 	{

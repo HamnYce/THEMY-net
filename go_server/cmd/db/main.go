@@ -1,4 +1,5 @@
-package internal_db
+package main
+
 
 import (
 	"database/sql"
@@ -6,8 +7,9 @@ import (
 	"strings"
 	debug "themynet/internal/debug"
 )
+// TODO: get db info from env toml and internal_db provides the connection
 
-func SeedDb(db *sql.DB) (err error) {
+func main(db *sql.DB) (err error) {
 	debug.DebugPrintf("reading from data.sql\n")
 	sqlInitTableStmt, err := os.ReadFile("data.sql")
 
