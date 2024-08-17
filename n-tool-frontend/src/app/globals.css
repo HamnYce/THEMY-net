@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './colors.css'; 
+
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    text-align: left;
+  }
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+main {
+  @apply max-w-6xl mx-auto my-12;
+  
+}
+
+nav {
+  @apply max-w-6xl my-12;
+  width: 100%;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+}
+
+p {
+  @apply mt-2;
+}
+
+h1 {
+  @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+}
+
+h2 {
+  @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
+}
+.stat , .stat-title , .stat-value {
+  color:var(--text-color);
+}
+.stat-desc{
+  color:var(--text-color-sub);
+}
+.stats-timestamp-text{
+  font-size:8px;
+}
+
+/* START OF DataDiagram */
+/* DataDiagram specific styles */
+.react-flow__edge-path{
+  color:white !important;
+  strike: yellow !important;
+}
+
+
+/* END OF DataDiagram */
