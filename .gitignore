@@ -1,0 +1,6 @@
+# Ignore node_modules and other files inside n-tool-frontend
+n-tool-frontend/node_modules/
+n-tool-frontend/.next/
+n-tool-frontend/out/
+n-tool-frontend/build/
+n-tool-frontend/coverage/
