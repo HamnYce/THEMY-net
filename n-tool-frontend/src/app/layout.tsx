@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   title: "Network Scanner Tool",
   description: "A tool for monitoring your network",
 };
-
+//TODO: Exclude the header and footer from the login page.
+//The root layout for the frontend, calls the header and footer to every page.
 export default function RootLayout({
   children,
 }: Readonly<{

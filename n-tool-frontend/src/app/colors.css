@@ -1,5 +1,6 @@
 /* src/app/colors.css */
 :root {
+  /*The first list of colors were mostly pre-rendered by next, most will be removed or replaced. */
     --background: 0 0 0;
     --foreground: 255 255 255;
     --card: 0 0% 100%;

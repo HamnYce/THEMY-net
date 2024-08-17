@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './colors.css'; /* Import the color variables */
+@import './colors.css'; 
 
 
 

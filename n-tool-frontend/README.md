@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+# THEMY-net
+=======
+
+  
 
   
 
@@ -5,11 +10,19 @@
 
 # Project Directory Structure
 
-  This documentation for the frontend is incomplete, you can find more details in the comments of each file as you explore.
+  
 
-  ---
+This documentation for the frontend is incomplete, you can find more details in the comments of each file as you explore.
+
+  
+
+---
+
+  
 
 ## Project Root
+
+  
 
   
 
@@ -21,7 +34,11 @@
 
   
 
+  
+
 ### `public`
+
+  
 
   
 
@@ -31,7 +48,11 @@
 
   
 
+  
+
 #### `testJson.json` - Sample JSON file for testing datatable `
+
+  
 
   
 
@@ -39,11 +60,17 @@
 
   
 
+  
+
 #### `vercel.svg`
 
   
 
+  
+
 ---
+
+  
 
   
 
@@ -51,108 +78,61 @@
 
   
 
+  
+
 #### `app` - All folders inside with page.tsx are pages in Next.js
 
+- ##### `history`
+   ###### -`page.tsx`
   
+- ##### ` home`
+  ###### -`page.tsx`
 
-##### `history`
+- ##### `login`
+  ###### -`page.tsx`
 
-  
+- ##### `scanner`
+  ###### -`page.tsx`
 
-###### -`page.tsx`
+- ##### `verifyEnv`
+  ###### - `page.tsx` - Test for environment variables
 
-  
-
-##### `home`
-
-  
-
-###### -`page.tsx`
-
-  
-
-##### `login`
-
-  
-
-###### -`page.tsx`
-
-  
-
-##### `scanner`
-
-  
-
-###### -`page.tsx`
-
-  
-
-##### `verifyEnv`
-
-###### - `page.tsx` - Test for environment variables
-
-  
-  
-
-##### `colors.css`
-
-  
+ ##### `colors.css`
 
 ##### `favicon.ico`
 
-  
-
 ##### `globals.css`
 
-  
-
 ##### `layout.tsx`
-
-  
 
 ##### `page.tsx`
 
   
+#### `features``(Featuer-Specific components)`
 
-#### `components`
+- ##### `scanResults`
+  ###### -scanResults.tsx` - Component for displaying scan results
 
-  
 
-##### `footer`
+#### `components` `(Re-useable components)`
 
-  
-
-##### `header`
-
-  
-
-##### `scanResults`
-
-###### -scanResults.tsx` - Component for displaying scan results
-
-  
-
-#### `side`
-
-  
+- ##### `footer`
+   ###### -footer.tsx` 
+- ##### `header`
+  ###### -header.tsx` 
 
 #### `ui`
+###### -ui components` - SHA CDN & Custom UI components
 
   
-
-###### -ui components` - SHA CDN & Custom UI components
 
   
 
 #### `verifyEnv`
 
-  
 
 -  `verifyEnv.tsx` - Test script to make sure env variables are being read
 
-  
-
-  
 
 #### `lib`
 
@@ -160,19 +140,27 @@
 
 #### `utils`
 
-  
-
 -  `debugLogUtil.ts` - Disables/Enables debug based on env
+
+  
 
 -  `folderRouter.ts` - Router utilities
 
+  
+
 -  `resultsParser.ts` - Parses the json data
+
+  
 
 -  `resultsUtils.ts` - Utilities for scanResults
 
   
 
+  
+
 ---
+
+  
 
   
 
@@ -182,7 +170,11 @@
 
   
 
+  
+
 -  `components.json`
+
+  
 
   
 
@@ -190,7 +182,11 @@
 
   
 
+  
+
 -  `next.config.mjs`
+
+  
 
   
 
@@ -198,7 +194,11 @@
 
   
 
+  
+
 -  `package.json`
+
+  
 
   
 
@@ -206,7 +206,11 @@
 
   
 
+  
+
 -  `README.md`
+
+  
 
   
 
@@ -214,8 +218,13 @@
 
   
 
+  
+
 -  `tsconfig.json`
 
   
 
+  
+
 -  `.env.local`
+>>>>>>> cd71386 (Updated file structure, features folder for feature specific components and components folder for re-useable components, kept it simple)

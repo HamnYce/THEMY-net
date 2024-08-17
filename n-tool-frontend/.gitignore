@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+.DS_Store
+network_viewer_gui/src/app/data/*
+
+go_server/gomap/output.json
+go_server/.env
+go_server/.env.local
+go_server/build/*
+go_server/data.sqlite3
+go_server/go.sum
+go_server/env.toml
+=======
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -34,3 +46,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+>>>>>>> cd71386 (Updated file structure, features folder for feature specific components and components folder for re-useable components, kept it simple)

@@ -1,3 +1,4 @@
+//This is the home page which will display detailed "stats" for all things scanned. Data can be updated here by calling a "fetch" from the DB 
 "use client"
 import React, { useState } from 'react';
 import {
