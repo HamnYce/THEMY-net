@@ -6,6 +6,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
+import OverViewOsStats from "@/features/overviewDataDisplay/overviewOsStats"
  
 export default function Home() {
 
@@ -14,7 +15,7 @@ export default function Home() {
 
     <div>
     <div>Home</div>
-   
+    <OverViewOsStats />
   
     <ResizablePanelGroup direction="horizontal">
        
@@ -22,8 +23,10 @@ export default function Home() {
       Tailwind CSS is working? Color will be different if it is.
     </div></ResizablePanel>
     <ResizableHandle withHandle />
-    <ResizablePanel>Two</ResizablePanel>
+    <ResizablePanel>2</ResizablePanel>
   </ResizablePanelGroup>
+
+  
   </div>
   );
 }

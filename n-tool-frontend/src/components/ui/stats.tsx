@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardHeader, CardFooter, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardFooter, CardContent, CardTitle} from "@/components/ui/card";
 
 interface StatsProps {
   title: string;
@@ -12,7 +12,7 @@ interface StatsProps {
 
 const Stats: React.FC<StatsProps> = ({ title, value, timestampLabel, timestamp }) => {
   return (
-    <Card className="bg-card text-card-foreground shadow-sm rounded-lg">
+    <Card className="bg-white dark:bg-black text-black dark:text-white shadow-sm rounded-lg">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
