@@ -1,13 +1,13 @@
 package api_v1_handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
-	dbhelper "themynet/internal/db"
-  debug "themynet/internal/debug"
+	debug "themynet/internal/debug"
+	model "themynet/internal/model"
 )
 
+// START: jSONReqResVars ---------
 // struct to hold variables used in all CRUD handlers
 type jSONReqResVars struct {
 	reqJSON []byte
@@ -67,165 +67,154 @@ func (j *jSONReqResVars) jSONifyResMap() {
 	}
 }
 
+// END: jSONReqResVars ---------
+
 func setHeaderContentTypeJSON(w *http.ResponseWriter) {
 	(*w).Header().Del("Content-Type")
 	(*w).Header().Add("Content-Type", "application/json")
 }
 
-// takes in json with ["rows"] key containing array of rows to create
-// returns json with ["rows"] key containing array of created rows with all attributes
-// if any error occurs, ["errors"] key will contain array of error messages
-func CreateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		setHeaderContentTypeJSON(&w)
-		j := newJSONReqResVars()
+func CreateHostsHandler(w http.ResponseWriter, r *http.Request) {
+	setHeaderContentTypeJSON(&w)
+	j := newJSONReqResVars()
 
-		if r.Method != http.MethodPost {
-			j.errors = append(j.errors, "Only POST method is allowed")
-		}
-		j.readAndParseReqJSON(r)
-
-		if len(j.errors) == 0 {
-			for _, v := range j.resMap["rows"].([]any) {
-				row, err := dbhelper.MapToRow(v.(map[string]any))
-				if err != nil {
-					continue
-				}
-				dbhelper.CreateRow(db, row)
-				// TODO: return the newly created rows
-			}
-
-		}
-
-		j.jSONifyResMap()
-		debug.CheckAndFatal(j.err)
-
-		w.Write(j.resJSON)
+	if r.Method != http.MethodPost {
+		j.errors = append(j.errors, "Only POST method is allowed")
 	}
+	j.readAndParseReqJSON(r)
+
+	if j.resMap["hosts"] == nil {
+		j.errors = append(j.errors, "Hosts not provided")
+	}
+
+	// DATABASE INSERTION
+	if len(j.errors) == 0 {
+		for _, v := range j.resMap["hosts"].([]any) {
+			host := new(model.Host)
+			err := host.ParseMap(v.(map[string]any))
+			if err != nil {
+				continue
+			}
+			host.Createhost()
+		}
+	}
+
+	j.jSONifyResMap()
+	debug.CheckAndFatal(j.err)
+
+	w.Write(j.resJSON)
 }
 
-// takes in json with ["limit"] and ["offset"] keys
-// returns json with ["rows"] key containing array of rows
-// if any error occurs, ["errors"] key will contain array of error messages
-func RetrieveHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		setHeaderContentTypeJSON(&w)
-		j := newJSONReqResVars()
+func RetrieveHostsHandler(w http.ResponseWriter, r *http.Request) {
+	setHeaderContentTypeJSON(&w)
+	j := newJSONReqResVars()
 
-		if r.Method != http.MethodPost {
-			j.errors = append(j.errors, "Only POST method is allowed")
+	if r.Method != http.MethodPost {
+		j.errors = append(j.errors, "Only POST method is allowed")
+	}
+
+	j.readAndParseReqJSON(r)
+
+	if j.resMap["limit"] == nil {
+		j.errors = append(j.errors, "Limit not provided")
+	}
+
+	if j.resMap["offset"] == nil {
+		j.errors = append(j.errors, "Offset not provided")
+	}
+
+	// DATABASE RETRIEVAL
+	if len(j.errors) == 0 {
+		limit := int(j.resMap["limit"].(float64))
+		offset := int(j.resMap["offset"].(float64))
+		hosts, err := model.Retrievehosts(limit, offset)
+		if err != nil {
+			j.errors = append(j.errors, err.Error())
+		} else {
+			j.resMap["hosts"] = hosts
 		}
+	}
 
-		j.readAndParseReqJSON(r)
+	delete(j.resMap, "limit")
+	delete(j.resMap, "offset")
 
-		if j.resMap["limit"] == nil {
-			j.errors = append(j.errors, "Limit not provided")
-		}
+	j.jSONifyResMap()
+	debug.CheckAndFatal(j.err)
+	w.Write(j.resJSON)
 
-		if j.resMap["offset"] == nil {
-			j.errors = append(j.errors, "Offset not provided")
-		}
+}
 
-		if len(j.errors) == 0 {
-			limit := int(j.resMap["limit"].(float64))
-			offset := int(j.resMap["offset"].(float64))
-			rows, err := dbhelper.RetrieveRows(db, limit, offset)
+func UpdateHostsHandler(w http.ResponseWriter, r *http.Request) {
+	setHeaderContentTypeJSON(&w)
+	j := newJSONReqResVars()
+
+	if r.Method != http.MethodPost {
+		j.errors = append(j.errors, "Only POST method is allowed")
+	}
+	j.readAndParseReqJSON(r)
+
+	// DATABASE UPDATE
+	if len(j.errors) == 0 {
+		updatedhosts := make([]model.Host, 0)
+		for _, hostMap := range j.resMap["hosts"].([]any) {
+			host := new(model.Host)
+			err := host.Updatehost(hostMap.(map[string]any))
 			if err != nil {
 				j.errors = append(j.errors, err.Error())
-			} else {
-				j.resMap["rows"] = rows
+				continue
 			}
+
+			// Retrievig newly constructed host
+
+			updatedhost, err := model.Retrievehost(*host.Id)
+			if err != nil {
+				continue
+			}
+
+			updatedhosts = append(updatedhosts, updatedhost)
 		}
-
-		delete(j.resMap, "limit")
-		delete(j.resMap, "offset")
-
-		j.jSONifyResMap()
-		debug.CheckAndFatal(j.err)
-		w.Write(j.resJSON)
+		j.resMap["hosts"] = updatedhosts
 	}
+
+	// converting resMap to resJSON
+	j.jSONifyResMap()
+	debug.CheckAndFatal(j.err)
+	w.Write(j.resJSON)
+
 }
 
-// takes in json with ["rows"] key containing array of rows to update
-// returns json with ["rows"] key containing array of updated rows with all attributes
-// even if only one attribute is updated
-// if any error occurs, ["errors"] key will contain array of error messages
-func UpdateHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		setHeaderContentTypeJSON(&w)
-		j := newJSONReqResVars()
+func DeleteHostsHandler(w http.ResponseWriter, r *http.Request) {
+	setHeaderContentTypeJSON(&w)
+	j := newJSONReqResVars()
 
-		if r.Method != http.MethodPost {
-			j.errors = append(j.errors, "Only POST method is allowed")
-		}
-		j.readAndParseReqJSON(r)
-
-		if len(j.errors) == 0 {
-			updatedRows := make([]map[string]any, 0)
-			for _, row := range j.resMap["rows"].([]any) {
-				err := dbhelper.UpdateRow(db, row.(map[string]any))
-				if err != nil {
-					j.errors = append(j.errors, err.Error())
-					continue
-				}
-
-				// Retrievig newly constructed row
-				rowID := int(row.(map[string]any)["Id"].(float64))
-				row, err := dbhelper.RetrieveRow(db, rowID)
-				if err != nil {
-					continue
-				}
-
-				updatedRow, err := dbhelper.RowToMap(row)
-				if err != nil {
-					continue
-				}
-
-				updatedRows = append(updatedRows, updatedRow)
-			}
-			j.resMap["rows"] = updatedRows
-		}
-
-		// converting resMap to resJSON
-		j.jSONifyResMap()
-		debug.CheckAndFatal(j.err)
-		w.Write(j.resJSON)
+	if r.Method != http.MethodPost {
+		j.errors = append(j.errors, "Only Post method is allowed")
 	}
-}
+	j.readAndParseReqJSON(r)
 
-// takes in json with ["rowIDs"] key containing array of rowIDs to delete
-// returns json with ["deletedRowIDs"] key containing array of rowIDs that were successfully deleted
-// if any error occurs, ["errors"] key will contain array of error messages
-func DeleteHostsHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		setHeaderContentTypeJSON(&w)
-		j := newJSONReqResVars()
+	// DATABASE DELETE
+	deletedhostIDs := make([]int, 0)
+	if len(j.errors) == 0 {
+		for _, rawhostID := range j.resMap["hostIDs"].([]any) {
+			host := new(model.Host)
+			host.Id = new(int)
+			*(host.Id) = int(rawhostID.(float64))
 
-		if r.Method != http.MethodPost {
-			j.errors = append(j.errors, "Only Post method is allowed")
-		}
-		j.readAndParseReqJSON(r)
+			success, err := host.Deletehost()
+			if err != nil {
+				j.errors = append(j.errors, err.Error())
+				continue
+			}
 
-		deletedRowIDs := make([]int, 0)
-		if len(j.errors) == 0 {
-			for _, rawRowID := range j.resMap["rowIDs"].([]any) {
-				rowID := int(rawRowID.(float64))
-				success, err := dbhelper.DeleteRow(db, rowID)
-				if err != nil {
-					j.errors = append(j.errors, err.Error())
-					continue
-				}
-
-				if success {
-					deletedRowIDs = append(deletedRowIDs, rowID)
-				}
+			if success {
+				deletedhostIDs = append(deletedhostIDs, *host.Id)
 			}
 		}
-		j.resMap["deletedRowIDs"] = deletedRowIDs
-		delete(j.resMap, "rowIDs")
-
-		j.jSONifyResMap()
-		debug.CheckAndFatal(j.err)
-		w.Write(j.resJSON)
 	}
+	j.resMap["deletedHostIDs"] = deletedhostIDs
+	delete(j.resMap, "hostIDs")
+
+	j.jSONifyResMap()
+	debug.CheckAndFatal(j.err)
+	w.Write(j.resJSON)
 }

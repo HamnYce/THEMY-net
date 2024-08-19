@@ -1,97 +1,80 @@
 package main
 
 import (
-	"database/sql"
-	"errors"
 	"fmt"
-	"log"
 	"net/http"
+	"os"
 	handlers "themynet/api/v1/handlers"
-	dbhelper "themynet/internal/db"
+	datab "themynet/internal/db"
 	debug "themynet/internal/debug"
 
-	"github.com/BurntSushi/toml"
+	"github.com/joho/godotenv"
+
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 var (
-	HOST_IP string
-	PORT    string
+	HOST               string
+	PORT               string
+	TURSO_DATABASE_URL string
+	TURSO_AUTH_TOKEN   string
 )
 
-func getTursoURLFromToml() (url string, err error) {
-	var tomlMap map[string]any
-	toml.DecodeFile("env.toml", &tomlMap)
+func runConfig() {
+	godotenv.Load("./.env_local")
+	HOST = os.Getenv("HOST")
+	PORT = os.Getenv("PORT")
+	TURSO_DATABASE_URL = os.Getenv("TURSO_DATABASE_URL")
+	TURSO_AUTH_TOKEN = os.Getenv("TURSO_AUTH_TOKEN")
 
-	if tomlMap["TURSO"] == nil {
-		return url, errors.New("Turso not in env.toml")
+	if os.Getenv("DEBUG") == "true" {
+		debug.SetDebug(true)
 	}
-	tursoMap := tomlMap["TURSO"].(map[string]any)
-
-	if tursoMap["TURSO_DATABASE_URL"] == nil {
-		debug.CheckAndFatal(errors.New("TURSO_DATABASE_URL not set"))
-	}
-
-	if tursoMap["TURSO_AUTH_TOKEN"] == nil {
-		debug.CheckAndFatal(errors.New("TURSO_AUTH_TOKEN not set"))
-	}
-
-	url = fmt.Sprintf("%s?authToken=%s",
-		tursoMap["TURSO_DATABASE_URL"],
-		tursoMap["TURSO_AUTH_TOKEN"],
-	)
-
-	return
-}
-
-func configWithToml() {
-	// TODO: get information about debug and such from the toml file
-	//  set debug and seed here
-	log.Fatal("Implement this. at the moment its just setting debug debug for the api section")
 }
 
 func main() {
-	// FIXME: test with turso
 	debug.DebugPrintf("Starting server with DEBUG on")
+	runConfig()
+	fmt.Println("HOST: ", HOST)
+	fmt.Println("PORT: ", PORT)
+	fmt.Println("TURSO_DATABASE_URL: ", TURSO_DATABASE_URL)
+	fmt.Println("TURSO_DATABASE TOKEN: ", TURSO_AUTH_TOKEN)
 
-	url, err := getTursoURLFromToml()
-	debug.CheckAndFatal(err)
-
-	db, err := sql.Open("libsql", url)
+	db, err := datab.InitTursoDB(TURSO_DATABASE_URL, TURSO_AUTH_TOKEN)
 	debug.CheckAndFatal(err)
 	defer db.Close()
 
 	// attach createHosts handler
 	{
 		debug.DebugPrintf("attaching createHost Handler\n")
-		http.HandleFunc("/CreateHosts", handlers.CreateHostsHandler(db))
+		http.HandleFunc("/CreateHosts", handlers.CreateHostsHandler)
 		debug.DebugPrintf("attached createHost Handler\n")
 	}
 
 	// attach RetrieveHosts handler
 	{
 		debug.DebugPrintf("attaching RetrieveHosts Handler\n")
-		http.HandleFunc("/RetrieveHosts", handlers.RetrieveHostsHandler(db))
+		http.HandleFunc("/RetrieveHosts", handlers.RetrieveHostsHandler)
 		debug.DebugPrintf("attached RetrieveHosts Handler\n")
 	}
 
 	// attach UpdateHosts handler
 	{
 		debug.DebugPrintf("attaching UpdateHost Handler\n")
-		http.HandleFunc("/UpdateHosts", handlers.UpdateHostsHandler(db))
+		http.HandleFunc("/UpdateHosts", handlers.UpdateHostsHandler)
 		debug.DebugPrintf("attached UpdateHost Handler\n")
 	}
 
 	// attach DeleteHosts handler
 	{
 		debug.DebugPrintf("attaching DeleteHost Handler\n")
-		http.HandleFunc("/DeleteHosts", handlers.DeleteHostsHandler(db))
+		http.HandleFunc("/DeleteHosts", handlers.DeleteHostsHandler)
 		debug.DebugPrintf("attached DeleteHost Handler\n")
 	}
 
-	debug.DebugPrintf("Listening on %s:%s\n", HOST_IP, PORT)
+	debug.DebugPrintf("Listening on %s:%s\n", HOST, PORT)
 
-	err = http.ListenAndServe(HOST_IP+":"+PORT, nil)
+	err = http.ListenAndServe(HOST+":"+PORT, nil)
 
 	debug.CheckAndFatal(err)
 }

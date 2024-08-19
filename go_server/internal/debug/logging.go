@@ -7,6 +7,10 @@ var (
 	SEED  = false
 )
 
+func SetDebug(debug bool) {
+	DEBUG = debug
+}
+
 func DebugPrintf(format string, args ...any) {
 	if DEBUG {
 		log.Printf(format, args...)
@@ -15,8 +19,8 @@ func DebugPrintf(format string, args ...any) {
 
 func CheckAndFatal(err error) {
 	if err == nil {
-    return
+		return
 	}
 
-  log.Fatal(err)
+	log.Fatal(err)
 }
