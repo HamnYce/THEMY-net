@@ -1,5 +1,14 @@
+<<<<<<< HEAD
+# Ignore node_modules and other files inside n-tool-frontend
+n-tool-frontend/node_modules/
+n-tool-frontend/.next/
+n-tool-frontend/out/
+n-tool-frontend/build/
+n-tool-frontend/coverage/
+=======
 .DS_Store
 network_viewer_gui/src/app/data/*
+
 
 go_server/gomap/output.json
 go_server/.env

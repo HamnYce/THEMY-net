@@ -4,14 +4,15 @@ import "./globals.css";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
 import { getOrderedFolders } from "@/utils/folderRouter";
-
+import "@fortawesome/fontawesome-free/css/all.min.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Network Scanner Tool",
   description: "A tool for monitoring your network",
 };
-
+//TODO: Exclude the header and footer from the login page.
+//The root layout for the frontend, calls the header and footer to every page.
 export default function RootLayout({
   children,
 }: Readonly<{

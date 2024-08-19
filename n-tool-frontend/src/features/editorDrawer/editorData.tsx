@@ -1,0 +1,1 @@
+//TODO: Finish the editor drawer component. The function is as represented by our UI sketch on notion, it will be the drawer that opens up in the 2nd image, to edit specific data.

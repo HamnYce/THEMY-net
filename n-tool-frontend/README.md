@@ -1,221 +1,115 @@
+<<<<<<< HEAD
 
-  
+# THEMY-net
 
-  
+=======
 
 # Project Directory Structure
 
-  This documentation for the frontend is incomplete, you can find more details in the comments of each file as you explore.
+This documentation for the frontend is incomplete, you can find more details in the comments of each file as you explore.
 
-  ---
+---
 
 ## Project Root
 
-  
-
-  
-
--  `n-tool-frontend`
-
-  
-
-  
+- `n-tool-frontend`
 
 ### `public`
 
-  
-
-  
-
 #### `assets`
-
-  
 
 #### `testJson.json` - Sample JSON file for testing datatable `
 
-  
-
 #### `next.svg`
-
-  
 
 #### `vercel.svg`
 
-  
-
 ---
-
-  
 
 ### `src`
 
-  
-
 #### `app` - All folders inside with page.tsx are pages in Next.js
 
-  
+- ##### `history`
+  ###### -`page.tsx`
+- ##### ` home`
 
-##### `history`
+  ###### -`page.tsx`
 
-  
+- ##### `login`
 
-###### -`page.tsx`
+  ###### -`page.tsx`
 
-  
+- ##### `scanner`
 
-##### `home`
+  ###### -`page.tsx`
 
-  
-
-###### -`page.tsx`
-
-  
-
-##### `login`
-
-  
-
-###### -`page.tsx`
-
-  
-
-##### `scanner`
-
-  
-
-###### -`page.tsx`
-
-  
-
-##### `verifyEnv`
-
-###### - `page.tsx` - Test for environment variables
-
-  
-  
+- ##### `verifyEnv`
+  ###### - `page.tsx` - Test for environment variables
 
 ##### `colors.css`
 
-  
-
 ##### `favicon.ico`
-
-  
 
 ##### `globals.css`
 
-  
-
 ##### `layout.tsx`
-
-  
 
 ##### `page.tsx`
 
-  
+#### ` features``(Featuer-Specific components) `
 
-#### `components`
+- ##### `scanResults`
+  ###### -scanResults.tsx` - Component for displaying scan results
 
-  
+#### `components` `(Re-useable components)`
 
-##### `footer`
-
-  
-
-##### `header`
-
-  
-
-##### `scanResults`
-
-###### -scanResults.tsx` - Component for displaying scan results
-
-  
-
-#### `side`
-
-  
+- ##### `footer`
+  ###### -footer.tsx`
+- ##### `header`
+  ###### -header.tsx`
 
 #### `ui`
 
-  
-
 ###### -ui components` - SHA CDN & Custom UI components
-
-  
 
 #### `verifyEnv`
 
-  
-
--  `verifyEnv.tsx` - Test script to make sure env variables are being read
-
-  
-
-  
+- `verifyEnv.tsx` - Test script to make sure env variables are being read
 
 #### `lib`
 
-  
-
 #### `utils`
 
-  
+- `debugLogUtil.ts` - Disables/Enables debug based on env
 
--  `debugLogUtil.ts` - Disables/Enables debug based on env
+- `folderRouter.ts` - Router utilities
 
--  `folderRouter.ts` - Router utilities
+- `resultsParser.ts` - Parses the json data
 
--  `resultsParser.ts` - Parses the json data
-
--  `resultsUtils.ts` - Utilities for scanResults
-
-  
+- `resultsUtils.ts` - Utilities for scanResults
 
 ---
 
-  
-
 ### Root Files
 
-  
+- `components.json`
 
-  
+- `next-env.d.ts`
 
--  `components.json`
+- `next.config.mjs`
 
-  
+- `package-lock.json`
 
--  `next-env.d.ts`
+- `package.json`
 
-  
+- `postcss.config.mjs`
 
--  `next.config.mjs`
+- `README.md`
 
-  
+- `tailwind.config.ts`
 
--  `package-lock.json`
+- `tsconfig.json`
 
-  
-
--  `package.json`
-
-  
-
--  `postcss.config.mjs`
-
-  
-
--  `README.md`
-
-  
-
--  `tailwind.config.ts`
-
-  
-
--  `tsconfig.json`
-
-  
-
--  `.env.local`
+- `.env.local`
+  > > > > > > > cd71386 (Updated file structure, features folder for feature specific components and components folder for re-useable components, kept it simple)

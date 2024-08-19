@@ -1,5 +1,7 @@
 module themynet
+module themynet
 
+go 1.22.5
 go 1.22.5
 
 require (
@@ -7,6 +9,11 @@ require (
 	github.com/joho/godotenv v1.5.1
 )
 
+require (
+	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
+	github.com/coder/websocket v1.8.12 // indirect
+	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 // indirect
+)
 require (
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/coder/websocket v1.8.12 // indirect
