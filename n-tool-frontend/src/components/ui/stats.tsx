@@ -12,7 +12,7 @@ interface StatsProps {
 
 const Stats: React.FC<StatsProps> = ({ title, value, timestampLabel, timestamp }) => {
   return (
-    <Card className="bg-white dark:bg-black text-black dark:text-white shadow-sm rounded-lg">
+    <Card className=" shadow-sm rounded-lg">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
