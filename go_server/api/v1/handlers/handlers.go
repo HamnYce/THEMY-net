@@ -8,6 +8,7 @@ import (
 )
 
 // START: jSONReqResVars ---------
+// struct to hold variables used in all CRUD handlers
 type jSONReqResVars struct {
 	reqJSON []byte
 	resMap  map[string]any
