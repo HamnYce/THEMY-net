@@ -7,6 +7,8 @@ import (
 	model "themynet/internal/model"
 )
 
+// struct to hold variables used in all CRUD handlers
+
 // START: jSONReqResVars ---------
 // struct to hold variables used in all CRUD handlers
 type jSONReqResVars struct {
