@@ -1,4 +1,4 @@
-package internal_model
+package model
 
 import (
 	"database/sql"

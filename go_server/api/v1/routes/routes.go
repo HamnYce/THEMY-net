@@ -1,4 +1,4 @@
-package api_v1_routes
+package apiv1routes
 
 import (
 	"net/http"
