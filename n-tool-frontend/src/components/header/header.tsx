@@ -1,4 +1,3 @@
-//TODO: Might be a smart idea to replace light and dark classes and utilize tailwinds built in darkMode.
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,7 +9,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import SecurityAlert from "@/features/securityAlert/securityAlert"; // Import SecurityAlert component
+import SecurityAlert from "@/features/securityAlert/securityAlert";
 import "./header.css";
 
 interface HeaderProps {
@@ -18,21 +17,19 @@ interface HeaderProps {
 }
 
 export default function Header({ orderedFolders }: HeaderProps) {
-  const [isRootMode, setIsRootMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     const rootElement = document.documentElement;
-    if (isRootMode) {
-      rootElement.classList.remove("light");
-      rootElement.classList.add("root");
+    if (isDarkMode) {
+      rootElement.classList.add("dark");
     } else {
-      rootElement.classList.remove("root");
-      rootElement.classList.add("light");
+      rootElement.classList.remove("dark");
     }
-  }, [isRootMode]);
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
-    setIsRootMode((prevMode) => !prevMode);
+    setIsDarkMode((prevMode) => !prevMode);
   };
 
   return (
@@ -53,13 +50,10 @@ export default function Header({ orderedFolders }: HeaderProps) {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <div className="flex items-center space-x-4 ">
-          {/* SecurityAlert component */}
-          <SecurityAlert alertCount={85} />{" "}
-          {/* Example value , try changing it */}
-          {/* Theme Toggle Switch */}
+        <div className="flex items-center space-x-4">
+          <SecurityAlert alertCount={85} />
           <div className="dark-light-switch">
-            <Switch checked={!isRootMode} onCheckedChange={toggleTheme} />
+            <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
           </div>
         </div>
       </nav>
