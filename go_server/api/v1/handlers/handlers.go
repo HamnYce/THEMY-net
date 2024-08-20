@@ -1,4 +1,4 @@
-package api_v1_handlers
+package apiv1handlers
 
 import (
 	"encoding/json"
@@ -6,6 +6,8 @@ import (
 	debug "themynet/internal/debug"
 	model "themynet/internal/model"
 )
+
+// struct to hold variables used in all CRUD handlers
 
 // START: jSONReqResVars ---------
 // struct to hold variables used in all CRUD handlers
@@ -87,6 +89,8 @@ func CreateHostsHandler(w http.ResponseWriter, r *http.Request) {
 		j.errors = append(j.errors, "Hosts not provided")
 	}
 
+	// TODO: change this so that the code reads something like
+	// 	if len == 0 : services.createHosts()
 	// DATABASE INSERTION
 	if len(j.errors) == 0 {
 		for _, v := range j.resMap["hosts"].([]any) {

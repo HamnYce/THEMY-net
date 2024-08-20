@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	handlers "themynet/api/v1/handlers"
+	routes "themynet/api/v1/routes"
 	datab "themynet/internal/db"
 	debug "themynet/internal/debug"
 
@@ -32,45 +32,23 @@ func runConfig() {
 	}
 }
 
-func main() {
-	debug.DebugPrintf("Starting server with DEBUG on")
-	runConfig()
+func debugConfig() {
 	fmt.Println("HOST: ", HOST)
 	fmt.Println("PORT: ", PORT)
 	fmt.Println("TURSO_DATABASE_URL: ", TURSO_DATABASE_URL)
 	fmt.Println("TURSO_DATABASE TOKEN: ", TURSO_AUTH_TOKEN)
+}
+
+func main() {
+	debug.DebugPrintf("Starting server with DEBUG on")
+	runConfig()
+	debugConfig()
 
 	db, err := datab.InitTursoDB(TURSO_DATABASE_URL, TURSO_AUTH_TOKEN)
 	debug.CheckAndFatal(err)
 	defer db.Close()
 
-	// attach createHosts handler
-	{
-		debug.DebugPrintf("attaching createHost Handler\n")
-		http.HandleFunc("/CreateHosts", handlers.CreateHostsHandler)
-		debug.DebugPrintf("attached createHost Handler\n")
-	}
-
-	// attach RetrieveHosts handler
-	{
-		debug.DebugPrintf("attaching RetrieveHosts Handler\n")
-		http.HandleFunc("/RetrieveHosts", handlers.RetrieveHostsHandler)
-		debug.DebugPrintf("attached RetrieveHosts Handler\n")
-	}
-
-	// attach UpdateHosts handler
-	{
-		debug.DebugPrintf("attaching UpdateHost Handler\n")
-		http.HandleFunc("/UpdateHosts", handlers.UpdateHostsHandler)
-		debug.DebugPrintf("attached UpdateHost Handler\n")
-	}
-
-	// attach DeleteHosts handler
-	{
-		debug.DebugPrintf("attaching DeleteHost Handler\n")
-		http.HandleFunc("/DeleteHosts", handlers.DeleteHostsHandler)
-		debug.DebugPrintf("attached DeleteHost Handler\n")
-	}
+	routes.SetupRoutes()
 
 	debug.DebugPrintf("Listening on %s:%s\n", HOST, PORT)
 
