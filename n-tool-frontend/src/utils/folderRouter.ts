@@ -12,6 +12,7 @@ export function getOrderedFolders() {
     { name: "server", index: 1 },
     { name: "scanner", index: 2 },
     { name: "history", index: 3 },
+    { name: "testBackend", index: 3 },
   ];
 
   const exclude = ["login","verifyEnv"];

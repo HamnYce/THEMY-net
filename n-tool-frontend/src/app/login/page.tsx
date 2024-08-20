@@ -1,4 +1,4 @@
-//TODO: UI for login page, assuming SSH login can be input here, or perhaps a different method of authorization (admin login). 
+//TODO: UI for login page, assuming SSH login can be input here, or perhaps a different method of authorization (admin login).
 import React from "react";
 import Login from "@/components/ui/login"; // Ensure the path is correct
 

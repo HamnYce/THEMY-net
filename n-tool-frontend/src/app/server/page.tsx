@@ -1,21 +1,17 @@
-//This is the home page which will display detailed "stats" for all things scanned. Data can be updated here by calling a "fetch" from the DB 
-"use client"
-import React, { useState } from 'react';
+//This is the home page which will display detailed "stats" for all things scanned. Data can be updated here by calling a "fetch" from the DB
+"use client";
+import React, { useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import OverViewOsStats from "@/features/overviewDataDisplay/overviewOsStats"
  
 export default function Home() {
-
-
   return (
-
     <div>
     <div>Home</div>
-    <OverViewOsStats />
+   
   
     <ResizablePanelGroup direction="horizontal">
        
@@ -23,10 +19,8 @@ export default function Home() {
       Tailwind CSS is working? Color will be different if it is.
     </div></ResizablePanel>
     <ResizableHandle withHandle />
-    <ResizablePanel>2</ResizablePanel>
+    <ResizablePanel>Two</ResizablePanel>
   </ResizablePanelGroup>
-
-  
   </div>
   );
 }

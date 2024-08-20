@@ -9,6 +9,7 @@ n-tool-frontend/coverage/
 .DS_Store
 network_viewer_gui/src/app/data/*
 
+
 go_server/gomap/output.json
 go_server/.env
 go_server/.env.local
@@ -16,4 +17,4 @@ go_server/build/*
 go_server/data.sqlite3
 go_server/go.sum
 go_server/env.toml
->>>>>>> 07e7761831f3b9a1dbad051351814afdfeeb3a27
+go_server/.env_local

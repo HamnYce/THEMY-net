@@ -7,8 +7,9 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Input } from "@/components/ui/input"; 
-import { Switch } from "@/components/ui/switch"; 
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import SecurityAlert from "@/features/securityAlert/securityAlert";
 import "./header.css";
 
 interface HeaderProps {
@@ -16,21 +17,19 @@ interface HeaderProps {
 }
 
 export default function Header({ orderedFolders }: HeaderProps) {
-  const [isRootMode, setIsRootMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     const rootElement = document.documentElement;
-    if (isRootMode) {
-      rootElement.classList.remove("light");
-      rootElement.classList.add("root");
+    if (isDarkMode) {
+      rootElement.classList.add("dark");
     } else {
-      rootElement.classList.remove("root");
-      rootElement.classList.add("light");
+      rootElement.classList.remove("dark");
     }
-  }, [isRootMode]);
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
-    setIsRootMode((prevMode) => !prevMode);
+    setIsDarkMode((prevMode) => !prevMode);
   };
 
   return (
@@ -40,16 +39,22 @@ export default function Header({ orderedFolders }: HeaderProps) {
           <NavigationMenuList className="nav-list w-full">
             {orderedFolders.map((folder) => (
               <NavigationMenuItem key={folder.name} className="nav-item">
-                <NavigationMenuLink href={`/${folder.name}`} className="nav-link">
+                <NavigationMenuLink
+                  href={`/${folder.name}`}
+                  className="nav-link"
+                >
                   {folder.name.charAt(0).toUpperCase() + folder.name.slice(1)}
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-       
-        <div className="dark-light-switch">
-          <Switch checked={!isRootMode} onCheckedChange={toggleTheme} />
+
+        <div className="flex items-center space-x-4">
+          <SecurityAlert alertCount={85} />
+          <div className="dark-light-switch">
+            <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
+          </div>
         </div>
       </nav>
     </header>

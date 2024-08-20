@@ -1,10 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './colors.css'; 
-
-
-
+@import "./colors.css";
 
 @layer base {
   * {
@@ -19,14 +16,14 @@
   }
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
 
 main {
   @apply max-w-6xl mx-auto my-12;
-  
 }
 
 nav {
@@ -50,22 +47,23 @@ h1 {
 h2 {
   @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
 }
-.stat , .stat-title , .stat-value {
-  color:var(--text-color);
+.stat,
+.stat-title,
+.stat-value {
+  color: var(--text-color);
 }
-.stat-desc{
-  color:var(--text-color-sub);
+.stat-desc {
+  color: var(--text-color-sub);
 }
-.stats-timestamp-text{
-  font-size:8px;
+.stats-timestamp-text {
+  font-size: 8px;
 }
 
 /* START OF DataDiagram */
 /* DataDiagram specific styles */
-.react-flow__edge-path{
-  color:white !important;
+.react-flow__edge-path {
+  color: white !important;
   strike: yellow !important;
 }
-
 
 /* END OF DataDiagram */

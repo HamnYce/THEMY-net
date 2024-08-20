@@ -1,103 +1,53 @@
 <<<<<<< HEAD
+
 # THEMY-net
+
 =======
-
-  
-
-  
-
-  
 
 # Project Directory Structure
 
-  
-
 This documentation for the frontend is incomplete, you can find more details in the comments of each file as you explore.
 
-  
-
 ---
-
-  
 
 ## Project Root
 
-  
-
-  
-
-  
-
--  `n-tool-frontend`
-
-  
-
-  
-
-  
+- `n-tool-frontend`
 
 ### `public`
 
-  
-
-  
-
-  
-
 #### `assets`
-
-  
-
-  
 
 #### `testJson.json` - Sample JSON file for testing datatable `
 
-  
-
-  
-
 #### `next.svg`
-
-  
-
-  
 
 #### `vercel.svg`
 
-  
-
-  
-
 ---
 
-  
-
-  
-
 ### `src`
-
-  
-
-  
 
 #### `app` - All folders inside with page.tsx are pages in Next.js
 
 - ##### `history`
-   ###### -`page.tsx`
-  
+  ###### -`page.tsx`
 - ##### ` home`
+
   ###### -`page.tsx`
 
 - ##### `login`
+
   ###### -`page.tsx`
 
 - ##### `scanner`
+
   ###### -`page.tsx`
 
 - ##### `verifyEnv`
   ###### - `page.tsx` - Test for environment variables
 
- ##### `colors.css`
+##### `colors.css`
 
 ##### `favicon.ico`
 
@@ -107,124 +57,59 @@ This documentation for the frontend is incomplete, you can find more details in 
 
 ##### `page.tsx`
 
-  
-#### `features``(Featuer-Specific components)`
+#### ` features``(Featuer-Specific components) `
 
 - ##### `scanResults`
   ###### -scanResults.tsx` - Component for displaying scan results
 
-
 #### `components` `(Re-useable components)`
 
 - ##### `footer`
-   ###### -footer.tsx` 
+  ###### -footer.tsx`
 - ##### `header`
-  ###### -header.tsx` 
+  ###### -header.tsx`
 
 #### `ui`
+
 ###### -ui components` - SHA CDN & Custom UI components
-
-  
-
-  
 
 #### `verifyEnv`
 
-
--  `verifyEnv.tsx` - Test script to make sure env variables are being read
-
+- `verifyEnv.tsx` - Test script to make sure env variables are being read
 
 #### `lib`
 
-  
-
 #### `utils`
 
--  `debugLogUtil.ts` - Disables/Enables debug based on env
+- `debugLogUtil.ts` - Disables/Enables debug based on env
 
-  
+- `folderRouter.ts` - Router utilities
 
--  `folderRouter.ts` - Router utilities
+- `resultsParser.ts` - Parses the json data
 
-  
-
--  `resultsParser.ts` - Parses the json data
-
-  
-
--  `resultsUtils.ts` - Utilities for scanResults
-
-  
-
-  
+- `resultsUtils.ts` - Utilities for scanResults
 
 ---
 
-  
-
-  
-
 ### Root Files
 
-  
+- `components.json`
 
-  
+- `next-env.d.ts`
 
-  
+- `next.config.mjs`
 
--  `components.json`
+- `package-lock.json`
 
-  
+- `package.json`
 
-  
+- `postcss.config.mjs`
 
--  `next-env.d.ts`
+- `README.md`
 
-  
+- `tailwind.config.ts`
 
-  
+- `tsconfig.json`
 
--  `next.config.mjs`
-
-  
-
-  
-
--  `package-lock.json`
-
-  
-
-  
-
--  `package.json`
-
-  
-
-  
-
--  `postcss.config.mjs`
-
-  
-
-  
-
--  `README.md`
-
-  
-
-  
-
--  `tailwind.config.ts`
-
-  
-
-  
-
--  `tsconfig.json`
-
-  
-
-  
-
--  `.env.local`
->>>>>>> cd71386 (Updated file structure, features folder for feature specific components and components folder for re-useable components, kept it simple)
+- `.env.local`
+  > > > > > > > cd71386 (Updated file structure, features folder for feature specific components and components folder for re-useable components, kept it simple)

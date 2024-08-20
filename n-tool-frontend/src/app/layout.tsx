@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
 import { getOrderedFolders } from "@/utils/folderRouter";
-
+import "@fortawesome/fontawesome-free/css/all.min.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
