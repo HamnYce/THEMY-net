@@ -1,18 +1,22 @@
 /* src/app/colors.css */
 :root {
-  /*The first list of colors were mostly pre-rendered by next, most will be removed or replaced. */
+  /* The first list of colors were mostly pre-rendered by next, most will be removed or replaced. */
   --background: 255 255 255 1;
   --foreground: 0 0 0;
-  --primary: 222.2 84% 90%;
-  --primary-foreground: 0 0 0;
-  --secondary: 222.2 84% 95%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --accent: 222.2 84% 95%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --border: 222.2 84% 80%;
-  --input: 222.2 84% 90%;
-  --radius: 0.5rem;
 
+  /* Light mode colors */
+  --primary: 210 100% 65%; /* Light blue */
+
+
+  --secondary: 210 100% 90%; /* Lighter blue */
+ 
+
+  --accent: 210 100% 90%; /* Lighter blue */
+
+
+  --border: 210 100% 80%; /* Light blue-gray */
+  --input: 210 100% 85%; /* Light blue */
+ 
 
   --header-bg-color: #ffffff;
   --text-color: #000000;
@@ -27,25 +31,33 @@
   --DD-edge-marker-color: #ff5722;
   --DD-text-color: #333333;
   --DD-subText-color: #666666;
-}
-.light {
- /* removed this and using tailwind's light mode first 
- Leaving this message here incase there are any problems later.*/ 
+
+  --radius: 0.5rem;
 }
 
-.dark{
+.light {
+  /* Removed this and using tailwind's light mode first
+  Leaving this message here incase there are any problems later. */
+}
+
+.dark {
   --background: 0 0 0;
   --foreground: 255 255 255;
   
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --radius: 0.5rem;
+  /* Dark mode colors */
+  --primary: 0 0% 15%; /* dark gray */
+
+
+  --secondary: 0 0% 70%; /* Lighter gray */
+  
+
+  --accent: 0 0% 70%; /* Lighter gray */
+
+
+  --border: 0 0% 80%; /* Light gray */
+  --input: 0 0% 40%; /* Medium dark gray */
+ 
+
   --header-bg-color: #000000;
   --text-color: #ffffff;
   --text-color-sub: #b2beb5;
@@ -53,11 +65,13 @@
   --menu-hover-item-bg-color: #303030;
   --menu-active-item-bg-color: #202020;
 
-  /* Dark Mode Colors for DataDiagram*/
+  /* Dark Mode Colors for DataDiagram */
   --DD-bg-color: #121212;
   --DD-card-bg-color: #1e1e1e;
   --DD-edge-color: #ffffff;
   --DD-edge-marker-color: #ff5722;
   --DD-text-color: #e0e0e0;
   --DD-subText-color: #c0c0c0;
+
+  --radius: 0.5rem;
 }
