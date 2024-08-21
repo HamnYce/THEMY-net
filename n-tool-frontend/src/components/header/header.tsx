@@ -33,7 +33,7 @@ export default function Header({ orderedFolders }: HeaderProps) {
   };
 
   return (
-    <header className="header">
+    <header className="header bg-primary text-white">
       <nav className="nav-container">
         <NavigationMenu>
           <NavigationMenuList className="nav-list w-full">
