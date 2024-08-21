@@ -9,10 +9,11 @@ export function getOrderedFolders() {
   });
 
   const order = [
-    { name: "server", index: 1 },
-    { name: "scanner", index: 2 },
-    { name: "history", index: 3 },
-    { name: "testBackend", index: 3 },
+    { name: "dashboard", index: 1 },
+    { name: "networkAnalysis", index: 2 },
+    { name: "networkReports", index: 3 },
+    { name: "security", index: 4 },
+    { name: "testBackend", index: 5 },
   ];
 
   const exclude = ["login","verifyEnv"];
