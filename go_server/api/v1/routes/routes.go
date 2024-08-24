@@ -2,36 +2,33 @@ package apiv1routes
 
 import (
 	"net/http"
+	utils "themynet"
 	handlers "themynet/api/v1/handlers"
-	"themynet/internal/debug"
+	middleware "themynet/api/v1/middleware"
 )
 
 func SetupRoutes() {
-	// attach createHosts handler
 	{
-		debug.DebugPrintf("attaching createHost Handler\n")
-		http.HandleFunc("/CreateHosts", handlers.CreateHostsHandler)
-		debug.DebugPrintf("attached createHost Handler\n")
+		utils.DebugPrintf("attaching createHost Handler\n")
+		http.Handle("/CreateHosts", middleware.WrapperMiddleWare(http.HandlerFunc(handlers.CreateHostsHandler)))
+		utils.DebugPrintf("attached createHost Handler\n")
 	}
 
-	// attach RetrieveHosts handler
 	{
-		debug.DebugPrintf("attaching RetrieveHosts Handler\n")
-		http.HandleFunc("/RetrieveHosts", handlers.RetrieveHostsHandler)
-		debug.DebugPrintf("attached RetrieveHosts Handler\n")
+		utils.DebugPrintf("attaching RetrieveHosts Handler\n")
+		http.Handle("/RetrieveHosts", middleware.WrapperMiddleWare(http.HandlerFunc(handlers.RetrieveHostsHandler)))
+		utils.DebugPrintf("attached RetrieveHosts Handler\n")
 	}
 
-	// attach UpdateHosts handler
 	{
-		debug.DebugPrintf("attaching UpdateHost Handler\n")
-		http.HandleFunc("/UpdateHosts", handlers.UpdateHostsHandler)
-		debug.DebugPrintf("attached UpdateHost Handler\n")
+		utils.DebugPrintf("attaching UpdateHost Handler\n")
+		http.Handle("/UpdateHosts", middleware.WrapperMiddleWare(http.HandlerFunc(handlers.UpdateHostsHandler)))
+		utils.DebugPrintf("attached UpdateHost Handler\n")
 	}
 
-	// attach DeleteHosts handler
 	{
-		debug.DebugPrintf("attaching DeleteHost Handler\n")
-		http.HandleFunc("/DeleteHosts", handlers.DeleteHostsHandler)
-		debug.DebugPrintf("attached DeleteHost Handler\n")
+		utils.DebugPrintf("attaching DeleteHost Handler\n")
+		http.Handle("/DeleteHosts", middleware.WrapperMiddleWare(http.HandlerFunc(handlers.DeleteHostsHandler)))
+		utils.DebugPrintf("attached DeleteHost Handler\n")
 	}
 }

@@ -1,26 +1,35 @@
 package main
 
-// import (
-// 	"os"
-// 	"strings"
-// 	debug "themynet/internal/debug"
-// )
+import (
+	"bytes"
+	"log"
+	"os"
+	utils "themynet"
+	"themynet/internal/db"
+)
 
-// // TODO: get db info from env toml and internal_db provides the connection
+// TODO: this requires you to manually go back in migration i.e. atm delete the entire hosts table
+func main() {
+	utils.RunConfig()
+	utils.DebugConfig()
+	db.InitTursoDB(utils.GetTursoURL(), utils.GetTursoAuth())
 
-// func main() {
-// 	db := db.InitDB()
-// 	debug.DebugPrintf("reading from data.sql\n")
-// 	sqlInitTableStmt, err := os.ReadFile("cmd/api/db/init.sql")
+	sqlCreateTableStmt, err := os.ReadFile("cmd/db/migrations/2024-08-15_init.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	debug.DebugPrintf("read from data.sql\n")
-// 	debug.DebugPrintf("head: %s\n", strings.Join(strings.Split(string(sqlInitTableStmt), "\n")[0:10], ","))
+	sqlSeedTableStmt, err := os.ReadFile("cmd/db/seeds/2024-08-15_init_seed.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	if err != nil {
-// 		return
-// 	}
-
-// 	_, err = db.Exec(string(sqlInitTableStmt))
-
-// 	return
-// }
+	_, err = db.DBSingleton().Exec(string(
+		bytes.Join(
+			[][]byte{sqlCreateTableStmt, sqlSeedTableStmt}, []byte(";\n"),
+		),
+	))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
