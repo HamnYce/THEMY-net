@@ -20,7 +20,6 @@ func CreateHostsHandler(w http.ResponseWriter, r *http.Request) {
 		writeFatalError(w, err.Error())
 		return
 	}
-
 	if len(createHostsRequestDTO.Hosts) == 0 {
 		writeFatalError(w, "Hosts not provided")
 		return
@@ -28,7 +27,6 @@ func CreateHostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// DATABASE INSERTION
 	hostResponseDTO := services.CreateHosts(createHostsRequestDTO)
-	fmt.Println("len(createHostsResponseDTO)", len(hostResponseDTO.Hosts))
 
 	jsn, err := json.Marshal(hostResponseDTO)
 
