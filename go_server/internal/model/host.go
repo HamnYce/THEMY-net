@@ -51,19 +51,15 @@ func Retrievehosts(amount, offset uint) (hosts []sqls.Host, err error) {
 	return
 }
 
-func Updatehosts(hostMaps []map[string]any) (hosts []sqls.Host, err error) {
+func Updatehosts(updateHostParamsList []sqls.UpdateHostParams) (hosts []sqls.Host, err error) {
 	ctx := context.Background()
 	queries := sqls.New(db.DBSingleton())
 
-	for _, hostMap := range hostMaps {
-		updateHostParams := sqls.UpdateHostParams{}
-		a, err := json.Marshal(hostMap)
+	for _, updateHostParams := range updateHostParamsList {
+		host, err := queries.UpdateHost(ctx, updateHostParams)
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = json.Unmarshal(a, &updateHostParams)
-		log.Fatal(err)
-		host, err := queries.UpdateHost(ctx, updateHostParams)
 		hosts = append(hosts, host)
 	}
 
