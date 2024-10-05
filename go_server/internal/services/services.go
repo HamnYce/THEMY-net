@@ -19,6 +19,7 @@ func CreateHosts(createHostsRequestDTO dto.CreateHostsRequestDTO) (hostResponseD
 		}
 
 		// DB
+		// FIXME: This is broken
 		createdHost, err := model.Createhost(sqls.CreateHostParams{})
 		if err != nil {
 			hostResponseDTO.AddErrors("Host could not be created: " + err.Error())
