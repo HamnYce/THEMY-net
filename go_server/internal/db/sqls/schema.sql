@@ -1,0 +1,28 @@
+create table
+    hosts (
+        id AUTO INCREMENT PRIMARY KEY,
+        name VARCHAR(50),
+        mac VARCHAR(50),
+        ip VARCHAR(20),
+        hostname VARCHAR(50),
+        status INT,
+        exposure INT,
+        internetAccess INT,
+        os VARCHAR(8),
+        osVersion VARCHAR(6),
+        ports VARCHAR(5),
+        usage VARCHAR(9),
+        location VARCHAR(50),
+        owners VARCHAR(50),
+        dependencies VARCHAR(10),
+        createdAt DATE,
+        createdBy VARCHAR(50),
+        recordedAt DATE,
+        access VARCHAR(50),
+        connectsTo VARCHAR(50),
+        hostType VARCHAR(8),
+        exposedServices VARCHAR(6),
+        cpuCores INT,
+        ramGB INT,
+        storageGB INT
+    );
