@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"strconv"
+	"themynet/internal/db/sqls/sqls"
 	"themynet/internal/dto"
 	"themynet/internal/model"
 )
@@ -18,23 +19,17 @@ func CreateHosts(createHostsRequestDTO dto.CreateHostsRequestDTO) (hostResponseD
 		}
 
 		// DB
-		hostID, err := model.Createhost(*host)
+		createdHost, err := model.Createhost(sqls.CreateHostParams{})
 		if err != nil {
 			hostResponseDTO.AddErrors("Host could not be created: " + err.Error())
 			continue
 		}
-
-		// DB
-		host, err = model.Retrievehost(hostID)
-		if err != nil {
-			hostResponseDTO.AddErrors("Host created but could not be retrieved after, id=" + strconv.FormatInt(hostID, 10) + ": " + err.Error())
-			continue
-		}
+		host = &createdHost
 
 		// Model -> DTO
 		createdHostDTO, err := dto.ModelToDTO(*host)
 		if err != nil {
-			hostResponseDTO.AddErrors("Host created and retrieved but could not parse into DTO, id=" + strconv.FormatInt(hostID, 10) + ": " + err.Error())
+			hostResponseDTO.AddErrors("Host created and retrieved but could not parse into DTO, id=" + strconv.FormatInt(createdHost.ID.(int64), 10) + ": " + err.Error())
 			continue
 		}
 
@@ -49,7 +44,6 @@ func RetrieveHosts(retrieveHostsRequestDTO dto.RetrieveHostsRequestDTO) (hostRes
 	fmt.Printf("hosts: %+v", hosts)
 
 	if err != nil {
-
 		hostResponseDTO.AddErrors("could not retrieve hosts: " + err.Error())
 		return
 	}
@@ -57,8 +51,7 @@ func RetrieveHosts(retrieveHostsRequestDTO dto.RetrieveHostsRequestDTO) (hostRes
 	for _, host := range hosts {
 		hostDTO, err := dto.ModelToDTO(host)
 		if err != nil {
-
-			hostResponseDTO.AddErrors("could not convert retrieved model to DTO, id=" + strconv.FormatInt(host.Id, 10) + ": " + err.Error())
+			hostResponseDTO.AddErrors("could not convert retrieved model to DTO, id=" + strconv.FormatInt(host.ID.(int64), 10) + ": " + err.Error())
 			continue
 		}
 
@@ -97,7 +90,7 @@ func UpdateHosts(updateHostsRequestDTO dto.UpdateHostsRequestDTO) (hostResponseD
 	for _, host := range hosts {
 		hostDTO, err := dto.ModelToDTO(host)
 		if err != nil {
-			hostResponseDTO.AddErrors("error converting host to hostDTO, id=" + string(host.Id) + ": " + err.Error())
+			hostResponseDTO.AddErrors("error converting host to hostDTO, id=" + string(host.ID.(int64)) + ": " + err.Error())
 			continue
 		}
 		hostResponseDTO.AddHostDTO(hostDTO)

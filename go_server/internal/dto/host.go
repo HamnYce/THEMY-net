@@ -3,7 +3,7 @@ package dto
 import (
 	"encoding/json"
 	utils "themynet"
-	"themynet/internal/model"
+	"themynet/internal/db/sqls/sqls"
 )
 
 type HostDTO struct {
@@ -64,7 +64,7 @@ func (h *HostResponseDTO) AddHostDTO(hostDTO HostDTO) {
 	h.Hosts = append(h.Hosts, hostDTO)
 }
 
-func ModelToDTO(host model.Host) (hostDTO HostDTO, err error) {
+func ModelToDTO(host sqls.Host) (hostDTO HostDTO, err error) {
 	jsnHost, err := json.Marshal(host)
 	if err != nil {
 		return
@@ -75,13 +75,13 @@ func ModelToDTO(host model.Host) (hostDTO HostDTO, err error) {
 	return
 }
 
-func DtoToModel(hostDTO HostDTO) (host *model.Host, err error) {
+func DtoToModel(hostDTO HostDTO) (host *sqls.Host, err error) {
 	jsnHostDTO, err := json.Marshal(hostDTO)
 	if err != nil {
 		return
 	}
 
-	host = new(model.Host)
+	host = new(sqls.Host)
 	err = json.Unmarshal(jsnHostDTO, host)
 	utils.DebugPrintf("host: %+v\n", host)
 

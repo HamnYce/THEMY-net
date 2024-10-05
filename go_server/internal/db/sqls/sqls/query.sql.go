@@ -64,7 +64,7 @@ VALUES
         ?,
         ?,
         ?
-    ) RETURNING id
+    ) RETURNING id, name, mac, ip, hostname, status, exposure, internetaccess, os, osversion, ports, usage, location, owners, dependencies, createdat, createdby, recordedat, access, connectsto, hosttype, exposedservices, cpucores, ramgb, storagegb
 `
 
 type CreateHostParams struct {
@@ -94,7 +94,7 @@ type CreateHostParams struct {
 	Storagegb       sql.NullInt64  `json:"storagegb"`
 }
 
-func (q *Queries) CreateHost(ctx context.Context, arg CreateHostParams) (interface{}, error) {
+func (q *Queries) CreateHost(ctx context.Context, arg CreateHostParams) (Host, error) {
 	row := q.db.QueryRowContext(ctx, createHost,
 		arg.Name,
 		arg.Mac,
@@ -121,9 +121,35 @@ func (q *Queries) CreateHost(ctx context.Context, arg CreateHostParams) (interfa
 		arg.Ramgb,
 		arg.Storagegb,
 	)
-	var id interface{}
-	err := row.Scan(&id)
-	return id, err
+	var i Host
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Mac,
+		&i.Ip,
+		&i.Hostname,
+		&i.Status,
+		&i.Exposure,
+		&i.Internetaccess,
+		&i.Os,
+		&i.Osversion,
+		&i.Ports,
+		&i.Usage,
+		&i.Location,
+		&i.Owners,
+		&i.Dependencies,
+		&i.Createdat,
+		&i.Createdby,
+		&i.Recordedat,
+		&i.Access,
+		&i.Connectsto,
+		&i.Hosttype,
+		&i.Exposedservices,
+		&i.Cpucores,
+		&i.Ramgb,
+		&i.Storagegb,
+	)
+	return i, err
 }
 
 const deleteHost = `-- name: DeleteHost :one
@@ -274,7 +300,7 @@ func (q *Queries) ListHosts(ctx context.Context, arg ListHostsParams) ([]Host, e
 	return items, nil
 }
 
-const updateHost = `-- name: UpdateHost :exec
+const updateHost = `-- name: UpdateHost :one
 UPDATE hosts
 SET
     name = ?,
@@ -302,7 +328,7 @@ SET
     ramGB = ?,
     storageGB = ?
 WHERE
-    id = ?
+    id = ? RETURNING id, name, mac, ip, hostname, status, exposure, internetaccess, os, osversion, ports, usage, location, owners, dependencies, createdat, createdby, recordedat, access, connectsto, hosttype, exposedservices, cpucores, ramgb, storagegb
 `
 
 type UpdateHostParams struct {
@@ -333,8 +359,8 @@ type UpdateHostParams struct {
 	ID              interface{}    `json:"id"`
 }
 
-func (q *Queries) UpdateHost(ctx context.Context, arg UpdateHostParams) error {
-	_, err := q.db.ExecContext(ctx, updateHost,
+func (q *Queries) UpdateHost(ctx context.Context, arg UpdateHostParams) (Host, error) {
+	row := q.db.QueryRowContext(ctx, updateHost,
 		arg.Name,
 		arg.Mac,
 		arg.Ip,
@@ -361,5 +387,33 @@ func (q *Queries) UpdateHost(ctx context.Context, arg UpdateHostParams) error {
 		arg.Storagegb,
 		arg.ID,
 	)
-	return err
+	var i Host
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Mac,
+		&i.Ip,
+		&i.Hostname,
+		&i.Status,
+		&i.Exposure,
+		&i.Internetaccess,
+		&i.Os,
+		&i.Osversion,
+		&i.Ports,
+		&i.Usage,
+		&i.Location,
+		&i.Owners,
+		&i.Dependencies,
+		&i.Createdat,
+		&i.Createdby,
+		&i.Recordedat,
+		&i.Access,
+		&i.Connectsto,
+		&i.Hosttype,
+		&i.Exposedservices,
+		&i.Cpucores,
+		&i.Ramgb,
+		&i.Storagegb,
+	)
+	return i, err
 }

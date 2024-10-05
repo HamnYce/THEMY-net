@@ -72,9 +72,9 @@ VALUES
         ?,
         ?,
         ?
-    ) RETURNING id;
+    ) RETURNING *;
 
--- name: UpdateHost :exec
+-- name: UpdateHost :one
 UPDATE hosts
 SET
     name = ?,
@@ -102,7 +102,7 @@ SET
     ramGB = ?,
     storageGB = ?
 WHERE
-    id = ?;
+    id = ? RETURNING *;
 
 -- name: DeleteHost :one
 DELETE FROM hosts
