@@ -20,9 +20,9 @@ type Host struct {
 	Ip              *string
 	Mac             *string
 	Hostname        *string
-	Status          *bool
-	Exposure        *bool
-	InternetAccess  *bool
+    Status          *int    // Didn't find anything that converts int to bool in the code soo.. 
+    Exposure        *int    // Changed from *bool to *int since schema in init has them as int. 
+    InternetAccess  *int    // ~khabs
 	Os              *string
 	OsVersion       *string
 	Ports           *string
@@ -48,9 +48,9 @@ func (host *Host) New() {
 	host.Ip = new(string)
 	host.Mac = new(string)
 	host.Hostname = new(string)
-	host.Status = new(bool)
-	host.Exposure = new(bool)
-	host.InternetAccess = new(bool)
+    host.Status = new(int)         // Changed to *int
+    host.Exposure = new(int)       // Changed to *int
+    host.InternetAccess = new(int) // Changed to *int
 	host.Os = new(string)
 	host.OsVersion = new(string)
 	host.Ports = new(string)
@@ -105,7 +105,8 @@ func (host Host) Createhost() (hostID int64, err error) {
 }
 
 func Retrievehost(hostID int) (host Host, err error) {
-	dbGetStatement := "SELECT hostid, * FROM " + TABLE_NAME + " WHERE rowid = ?"
+	//dbGetStatement := "SELECT hostid, * FROM " + TABLE_NAME + " WHERE rowid = ?"
+	dbGetStatement := "SELECT * FROM " + TABLE_NAME + " WHERE id = ?"  //Changed query
 
 	debug.DebugPrintf("Executing Retrievehost Statement\n")
 	sqlhost, err := db.DBSingleton().Query(dbGetStatement, hostID)
@@ -126,7 +127,8 @@ func Retrievehost(hostID int) (host Host, err error) {
 }
 
 func Retrievehosts(amount, offset int) (hosts []Host, err error) {
-	dbGetStatement := fmt.Sprintf("SELECT rowid, * FROM "+TABLE_NAME+" LIMIT %d OFFSET %d", amount, offset)
+	//dbGetStatement := fmt.Sprintf("SELECT rowid, * FROM "+TABLE_NAME+" LIMIT %d OFFSET %d", amount, offset)
+	dbGetStatement := fmt.Sprintf("SELECT * FROM "+TABLE_NAME+" LIMIT %d OFFSET %d", amount, offset) //Changed query
 
 	debug.DebugPrintf("Executing Retrievehosts Statement\n")
 	sqlHosts, err := db.DBSingleton().Query(dbGetStatement)
@@ -203,35 +205,118 @@ func (host Host) Deletehost() (success bool, err error) {
 }
 
 // Scans current host from sql.hosts into dbhelper.host
+// func (host *Host) FromsqlHosts(sqlHosts *sql.Rows) (err error) {
+// 	debug.DebugPrintf("Scanning host\n")
+// 	return sqlHosts.Scan(
+// 		&host.Id,
+// 		&host.Name,
+// 		&host.Mac,
+// 		&host.Ip,
+// 		&host.Hostname,
+// 		&host.Status,
+// 		&host.Exposure,
+// 		&host.InternetAccess,
+// 		&host.Os,
+// 		&host.OsVersion,
+// 		&host.Ports,
+// 		&host.Usage,
+// 		&host.Location,
+// 		&host.Owners,
+// 		&host.Dependencies,
+// 		&host.CreatedAt,
+// 		&host.CreatedBy,
+// 		&host.RecordedAt,
+// 		&host.Access,
+// 		&host.ConnectsTo,
+// 		&host.HostType,
+// 		&host.ExposedServices,
+// 		&host.CpuCores,
+// 		&host.RamGB,
+// 		&host.StorageGB,
+// 	)
+// }
+
+
+//Debug Version.
 func (host *Host) FromsqlHosts(sqlHosts *sql.Rows) (err error) {
-	debug.DebugPrintf("Scanning host\n")
-	return sqlHosts.Scan(
-		&host.Id,
-		&host.Name,
-		&host.Mac,
-		&host.Ip,
-		&host.Hostname,
-		&host.Status,
-		&host.Exposure,
-		&host.InternetAccess,
-		&host.Os,
-		&host.OsVersion,
-		&host.Ports,
-		&host.Usage,
-		&host.Location,
-		&host.Owners,
-		&host.Dependencies,
-		&host.CreatedAt,
-		&host.CreatedBy,
-		&host.RecordedAt,
-		&host.Access,
-		&host.ConnectsTo,
-		&host.HostType,
-		&host.ExposedServices,
-		&host.CpuCores,
-		&host.RamGB,
-		&host.StorageGB,
-	)
+    debug.DebugPrintf("Scanning host\n")
+
+    // Define an array of placeholders for the Scan function
+    var (
+        id, status, exposure, internetAccess, cpuCores, ramGB, storageGB int
+        name, mac, ip, hostname, os, osVersion, ports, usage string
+        location, owners, dependencies, createdAt, createdBy, recordedAt string
+        access, connectsTo, hostType, exposedServices string
+    )
+
+    // Scan the fields one by one with individual error handling
+    if err := sqlHosts.Scan(
+        &id,
+        &name,
+        &mac,
+        &ip,
+        &hostname,
+        &status,
+        &exposure,
+        &internetAccess,
+        &os,
+        &osVersion,
+        &ports,
+        &usage,
+        &location,
+        &owners,
+        &dependencies,
+        &createdAt,
+        &createdBy,
+        &recordedAt,
+        &access,
+        &connectsTo,
+        &hostType,
+        &exposedServices,
+        &cpuCores,
+        &ramGB,
+        &storageGB,
+    ); err != nil {
+        debug.DebugPrintf("Error during Scan:\n")
+        debug.DebugPrintf("  id: %v\n  name: %v\n  mac: %v\n  ip: %v\n  hostname: %v\n", id, name, mac, ip, hostname)
+        debug.DebugPrintf("  status: %v\n  exposure: %v\n  internetAccess: %v\n", status, exposure, internetAccess)
+        debug.DebugPrintf("  os: %v\n  osVersion: %v\n  ports: %v\n  usage: %v\n", os, osVersion, ports, usage)
+        debug.DebugPrintf("  location: %v\n  owners: %v\n  dependencies: %v\n", location, owners, dependencies)
+        debug.DebugPrintf("  createdAt: %v\n  createdBy: %v\n  recordedAt: %v\n", createdAt, createdBy, recordedAt)
+        debug.DebugPrintf("  access: %v\n  connectsTo: %v\n  hostType: %v\n  exposedServices: %v\n", access, connectsTo, hostType, exposedServices)
+        debug.DebugPrintf("  cpuCores: %v\n  ramGB: %v\n  storageGB: %v\n", cpuCores, ramGB, storageGB)
+        debug.DebugPrintf("Scan error: %v\n", err)
+        return err
+    }
+
+    // Now assign the successfully scanned values to the struct fields
+    host.Id = &id
+    host.Name = &name
+    host.Mac = &mac
+    host.Ip = &ip
+    host.Hostname = &hostname
+    host.Status = &status
+    host.Exposure = &exposure
+    host.InternetAccess = &internetAccess
+    host.Os = &os
+    host.OsVersion = &osVersion
+    host.Ports = &ports
+    host.Usage = &usage
+    host.Location = &location
+    host.Owners = &owners
+    host.Dependencies = &dependencies
+    host.CreatedAt = &createdAt
+    host.CreatedBy = &createdBy
+    host.RecordedAt = &recordedAt
+    host.Access = &access
+    host.ConnectsTo = &connectsTo
+    host.HostType = &hostType
+    host.ExposedServices = &exposedServices
+    host.CpuCores = &cpuCores
+    host.RamGB = &ramGB
+    host.StorageGB = &storageGB
+
+    return nil
 }
 
 func (host *Host) ParseMap(hostMap map[string]any) (err error) {
