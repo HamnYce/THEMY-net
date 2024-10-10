@@ -1,17 +1,21 @@
 "use client";
-//TODO: Fix the nodes so that each individual node is draggable,and figure out a better way to categorize nodes. Perhaps have filters to group nodes according to the filter.
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
+  useNodesState,
+  useEdgesState,
+  addEdge,
   Background,
   Controls,
-  Node,
+  Connection,
   Edge,
+  Node,
 } from 'react-flow-renderer';
 import { debugLog } from '@/utils/debugLogUtil';
 import { NodeComponent, EdgeComponent, NodeDetailsDrawer, CustomTooltip } from './dataDiagramUi';
 
-
+// Define data interface
 export interface Data {
   Apps: string | null;
   IP: string;
@@ -36,7 +40,7 @@ export interface Data {
   RAM: number;
   Storage: number;
   OpenPorts: string[];
-  Range: string;
+  Range: string;  // The range property is defined here
 }
 
 interface DataDiagramProps {
@@ -52,29 +56,35 @@ const edgeTypes = {
 };
 
 const DataDiagram: React.FC<DataDiagramProps> = ({ data }) => {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState<Data | null>(null);
 
-  const nodes = useMemo(() => {
+  useEffect(() => {
+    // Explicitly define types for nodes and edges
     const generatedNodes = data.map((node, index) => ({
       id: node.IP,
       data: {
         label: <CustomTooltip hostname={node.Hostname} ip={node.IP} range={node.Range} />,
         details: `${node.Usage} | ${node.Status}`,
+        range: node.Range,  // Include range here so it can be used for edge generation
       },
       position: { x: (index % 4) * 250, y: Math.floor(index / 4) * 200 }, 
       type: 'custom',
-      range: node.Range, // Ensure range(subnet) is included
+      draggable: true, // Ensure nodes are draggable
     }));
-    debugLog("Generated nodes: ", generatedNodes);
-    return generatedNodes;
-  }, [data]);
 
-  const edges = useMemo(() => {
-    const edgesList: Edge[] = [];
-    nodes.forEach((node) => {
-      nodes.forEach((targetNode) => {
-        if (node.id !== targetNode.id && node.range === targetNode.range) {
-          edgesList.push({
+    const generatedEdges: Edge<any>[] = [];
+
+    // Create edges only once per pair of nodes
+    for (let i = 0; i < generatedNodes.length; i++) {
+      for (let j = i + 1; j < generatedNodes.length; j++) {
+        const node = generatedNodes[i];
+        const targetNode = generatedNodes[j];
+
+        // Connect nodes if their range matches
+        if (node.data.range === targetNode.data.range) {
+          generatedEdges.push({
             id: `${node.id}-${targetNode.id}`,
             source: node.id,
             target: targetNode.id,
@@ -84,16 +94,24 @@ const DataDiagram: React.FC<DataDiagramProps> = ({ data }) => {
             markerEnd: 'url(#edge-circle)',
           });
         }
-      });
-    });
-    debugLog("Generated edges: ", edgesList); // Debugging log to check edges
-    return edgesList;
-  }, [nodes]);
+      }
+    }
 
-  debugLog("Nodes: ", nodes);
-  debugLog("Edges: ", edges);
+    setNodes(generatedNodes);
+    setEdges(generatedEdges);
+  }, [data]);
 
-  const handleNodeClick = (_: React.MouseEvent, node: Node) => {
+  // Explicitly define 'params' type as Connection
+  const onConnect = useCallback(
+    (params: Connection) =>
+      setEdges((eds) =>
+        addEdge({ ...params, animated: true, style: { stroke: 'var(--DD-edge-color)' } }, eds)
+      ),
+    []
+  );
+
+  // Fix for handleNodeClick: Use correct Node type from 'react-flow-renderer'
+  const handleNodeClick = (_: React.MouseEvent, node: Node<any>) => {
     const clickedNode = data.find((item) => item.IP === node.id);
     setSelectedNode(clickedNode || null);
   };
@@ -104,31 +122,18 @@ const DataDiagram: React.FC<DataDiagramProps> = ({ data }) => {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          snapToGrid={true}
-          snapGrid={[15, 15]}
-          onNodeClick={handleNodeClick}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
+          onNodeClick={handleNodeClick}
+          snapToGrid={true}
+          snapGrid={[15, 15]}
           fitView
         >
           <Controls showInteractive={false} />
           <Background color="var(--DD-bg-color)" gap={16} />
-          <svg>
-            <defs>
-              <marker
-                id="edge-circle"
-                viewBox="-5 -5 10 10"
-                refX="0"
-                refY="0"
-                markerUnits="strokeWidth"
-                markerWidth="10"
-                markerHeight="10"
-                orient="auto"
-              >
-                <circle stroke="var(--DD-edge-marker-color)" strokeOpacity="0.75" r="2" cx="0" cy="0" />
-              </marker>
-            </defs>
-          </svg>
         </ReactFlow>
         <NodeDetailsDrawer selectedNode={selectedNode} onClose={() => setSelectedNode(null)} />
       </div>
